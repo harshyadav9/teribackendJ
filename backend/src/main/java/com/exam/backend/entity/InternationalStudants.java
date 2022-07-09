@@ -1,0 +1,49 @@
+package com.exam.backend.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import javax.persistence.*;
+import java.io.Serializable;
+
+@Entity
+@Table(name = "InternationalStudants")
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
+@Setter
+@ToString
+public class InternationalStudants implements Serializable {
+
+    @EmbeddedId
+    private InternationalStudantsId id;
+
+    @Column(name = "Class")
+    private String className;
+
+    @Column(name = "Section")
+    private String section;
+
+    @Column(name = "ExamTheme")
+    private String examTheme;
+
+    @Column(name = "DemoExam")
+    private String demoExam;
+
+    @Column(name = "ExamLevel")
+    private String examLevel;
+
+    @Column(name = "Password")
+    private String password;
+
+    @Column(name = "paymentStatus")
+    private Boolean paymentStatus;
+
+    @Column(name = "DemoSlotDateTime")
+    private String demoSlotDatetime;
+
+    @Column(name = "ExamSlotDateTime")
+    private String examSlotDatetime;
+
+}

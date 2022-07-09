@@ -1,0 +1,23 @@
+CREATE VIEW vwGetStudentCountByExamTheme
+AS
+SELECT SchoolID
+       ,ExamTheme
+      ,COUNT(DISTINCT SchoolID+Name+DOB) AS StudentCount
+FROM shooolnyt.InternationalStudants
+WHERE ExamSlotDateTime IS NULL
+GROUP BY SchoolID, ExamTheme
+UNION
+SELECT SchoolID
+      ,'MOCK'
+      ,COUNT(DISTINCT SchoolID+Name+DOB)
+FROM shooolnyt.InternationalStudants
+WHERE DemoExam='Yes' AND DemoSlotDateTime IS NULL
+GROUP BY SchoolID
+
+ALTER VIEW vwGetExamSlotByTheme
+AS
+SELECT sl.* ,stu.StudentCount,stu.SchoolID
+FROM vwGetStudentCountByExamTheme  stu
+JOIN shooolnyt.Slot sl
+ON  sl.ExamTheme = stu.ExamTheme
+WHERE sl.SeatAvailable>=stu.StudentCount

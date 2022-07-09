@@ -1,0 +1,92 @@
+package com.exam.backend.service;
+
+import com.exam.backend.entity.AllotedSlot;
+import com.exam.backend.entity.AllotedSlotId;
+import com.exam.backend.entity.SchoolSlotData;
+import com.exam.backend.pojo.SchoolSlotDataIncoming;
+import com.exam.backend.entity.Slot;
+import com.exam.backend.pojo.SchoolSlotUpdateStatus;
+import com.exam.backend.repository.SlotRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Service
+public class SlotServiceImpl implements SlotService {
+
+    Logger log = LoggerFactory.getLogger(SlotServiceImpl.class);
+    private final SlotRepository slotRepository;
+    private final InternationalStudantsServiceImpl internationalStudantsService;
+    private final AllotedSlotServiceImpl allotedSlotService;
+
+    @Autowired
+    public SlotServiceImpl(SlotRepository slotRepository, InternationalStudantsServiceImpl internationalStudantsService, AllotedSlotServiceImpl allotedSlotService) {
+        this.slotRepository = slotRepository;
+        this.internationalStudantsService = internationalStudantsService;
+        this.allotedSlotService = allotedSlotService;
+    }
+
+    @Override
+    public List<SchoolSlotData> getSlotsData(String schoolId, String mode) {
+        return internationalStudantsService.getSlotsData(schoolId, mode);
+
+    }
+
+    @Override
+    public SchoolSlotUpdateStatus updateSlotData(List<SchoolSlotDataIncoming> data) {
+        log.info("Inside updateSlotData(){}", data);
+
+        SchoolSlotUpdateStatus schoolSlotUpdateStatus = new SchoolSlotUpdateStatus();
+        Map<String,String> mp = new HashMap<>();
+
+        List<Slot> slots = new ArrayList<>();
+        List<AllotedSlot> allotedSlots = new ArrayList<>();
+
+        for (SchoolSlotDataIncoming schoolSlotData : data){
+            Slot slot = slotRepository.findBySlotId(schoolSlotData.getSlotId());
+            if (slot.getSeatAvailable() > schoolSlotData.getStudentCount()){
+                slot.setSeatAvailable(slot.getSeatAvailable() - schoolSlotData.getStudentCount());
+                slots.add(slot);
+
+                AllotedSlot allotedSlot = new AllotedSlot();
+                AllotedSlotId id = new AllotedSlotId();
+                id.setSlotId(slot.getSlotId());
+                id.setAllotedSchoolId(schoolSlotData.getSchoolId());
+                allotedSlot.setId(id);
+                allotedSlots.add(allotedSlot);
+                log.info("alloted slots Inside updateSlotData(){}", allotedSlots);
+            }
+            else {
+                mp.put("Error", "Slot selected for examTheme " + slot.getExamTheme() + " is not having required available seats.");
+                schoolSlotUpdateStatus.setStatus(mp);
+                schoolSlotUpdateStatus.setErrored(true);
+                log.info("Error slots mismatch with avaialable seats");
+            }
+        }
+
+        if (!schoolSlotUpdateStatus.isErrored()){
+            log.info("schoolSlotUpdateStatus is not errored");
+            slotRepository.saveAll(slots);
+            log.info("slots() save in slot table {}", slots);
+            for (SchoolSlotDataIncoming schoolSlotData: data){
+
+                internationalStudantsService.updateExamSlotAndDemoSlotDateTime(schoolSlotData.getSchoolId(), schoolSlotData.getExamTheme(),
+                        String.valueOf(schoolSlotData.getDateOfExam()), schoolSlotData.getSlotDatetime() );
+                log.info("internationalStudantsService table is updated with slot timing for school and examtheme {} {}",
+                        schoolSlotData.getSchoolId(), schoolSlotData.getExamTheme());
+            }
+            allotedSlotService.saveAll(allotedSlots);
+            log.info("allotedSlot table is updated successfully", allotedSlots);
+
+        }
+        log.info("schoolSlotUpdateStatus {}", schoolSlotUpdateStatus);
+        return schoolSlotUpdateStatus;
+    }
+
+}
