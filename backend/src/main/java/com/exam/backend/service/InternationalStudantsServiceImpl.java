@@ -65,6 +65,7 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
         return li;
     }
 
+
     @Override
     public void updateExamSlotAndDemoSlotDateTime(String schoolId, String examTheme, String examSlotDateTime, String demoSlotDateTime) {
         log.info("Inside updateExamSlotAndDemoSlotDateTime() {} {} {} {}", schoolId, examTheme, examSlotDateTime, demoSlotDateTime);
