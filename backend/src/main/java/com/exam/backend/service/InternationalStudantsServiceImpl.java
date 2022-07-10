@@ -42,7 +42,7 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
 
             InternationalStudant internationalStudant = new InternationalStudant();
             internationalStudant.setClassName(dto.getClassName());
-            internationalStudant.setDemoExam(dto.getDemoExam());
+            internationalStudant.setDemoExam(dto.getDemoExam() != null && !dto.getDemoExam().isEmpty() && dto.getDemoExam().equalsIgnoreCase("YES")? "YES" : "NO");
             internationalStudant.setExamTheme(dto.getExamTheme());
             InternationalStudantsId id = new InternationalStudantsId();
 
@@ -56,8 +56,8 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
             internationalStudant.setPaymentStatus(false);
             UUID uuid = UUID.randomUUID();
             internationalStudant.setStudentId(String.valueOf(uuid));
-            log.info("internationalStudants data() {}", internationalStudant);
             internationalStudantsRepository.save(internationalStudant);
+            log.info("internationalStudants data() is saved {}", internationalStudant);
         }
         log.info("Completed saveStudentsData() {}", data);
     }
