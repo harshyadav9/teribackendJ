@@ -84,14 +84,12 @@ public class SlotServiceImpl implements SlotService {
                 log.info("internationalStudantsService table is updated with slot timing for school and examtheme {} {}",
                         schoolSlotData.getSchoolId(), schoolSlotData.getExamTheme());
             }
-
             allotedSlotService.saveAll(allotedSlots);
-
             log.info("allotedSlot table is updated successfully", allotedSlots);
-            throw new RuntimeException("test");
 
         }
         log.info("schoolSlotUpdateStatus {}", schoolSlotUpdateStatus);
         return schoolSlotUpdateStatus;
     }
+
 }

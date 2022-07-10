@@ -7,5 +7,4 @@ import java.util.List;
 public interface AllotedSlotService {
 
     void saveAll(List<AllotedSlot> slots);
-
 }
