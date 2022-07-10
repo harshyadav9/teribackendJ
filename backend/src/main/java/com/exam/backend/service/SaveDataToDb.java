@@ -1,6 +1,5 @@
 package com.exam.backend.service;
 
-import com.exam.backend.entity.InternationalStudants;
 import com.exam.backend.pojo.InternationalStudantsDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

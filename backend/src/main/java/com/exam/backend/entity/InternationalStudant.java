@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-public class InternationalStudants implements Serializable {
+public class InternationalStudant implements Serializable {
 
     @EmbeddedId
     private InternationalStudantsId id;
@@ -45,5 +45,8 @@ public class InternationalStudants implements Serializable {
 
     @Column(name = "ExamSlotDateTime")
     private String examSlotDatetime;
+
+    @Column(name = "StudentID")
+    private String studentId;
 
 }

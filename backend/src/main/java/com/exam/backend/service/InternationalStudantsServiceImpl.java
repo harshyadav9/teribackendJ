@@ -1,6 +1,6 @@
 package com.exam.backend.service;
 
-import com.exam.backend.entity.InternationalStudants;
+import com.exam.backend.entity.InternationalStudant;
 import com.exam.backend.entity.InternationalStudantsId;
 import com.exam.backend.entity.SchoolSlotData;
 import com.exam.backend.entity.StudentClass;
@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class InternationalStudantsServiceImpl implements InternationalStudantsService {
@@ -37,7 +38,7 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
             StudentClass studentClass = classService.getClassLevel(dto.getClassName());
             log.info("studentClass data() {} {}", studentClass, data);
 
-            InternationalStudants internationalStudant = new InternationalStudants();
+            InternationalStudant internationalStudant = new InternationalStudant();
             internationalStudant.setClassName(dto.getClassName());
             internationalStudant.setDemoExam(dto.getDemoExam());
             internationalStudant.setExamTheme(dto.getExamTheme());
@@ -51,6 +52,8 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
             internationalStudant.setSection(dto.getSection());
             internationalStudant.setPassword(dto.getDob());
             internationalStudant.setPaymentStatus(false);
+            UUID uuid = UUID.randomUUID();
+            internationalStudant.setStudentId(String.valueOf(uuid));
             log.info("internationalStudants data() {}", internationalStudant);
             internationalStudantsRepository.save(internationalStudant);
         }
@@ -70,8 +73,8 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
     public void updateExamSlotAndDemoSlotDateTime(String schoolId, String examTheme, String examSlotDateTime, String demoSlotDateTime) {
         log.info("Inside updateExamSlotAndDemoSlotDateTime() {} {} {} {}", schoolId, examTheme, examSlotDateTime, demoSlotDateTime);
         if (!examTheme.equalsIgnoreCase("MOCK")){
-            List<InternationalStudants> li = internationalStudantsRepository.findByIdSchoolIdAndExamTheme(schoolId, examTheme);
-            for (InternationalStudants school : li) {
+            List<InternationalStudant> li = internationalStudantsRepository.findByIdSchoolIdAndExamTheme(schoolId, examTheme);
+            for (InternationalStudant school : li) {
                 if (school.getExamSlotDatetime() == null){
                     school.setExamSlotDatetime(examSlotDateTime + "-" + demoSlotDateTime);
                 }
@@ -82,8 +85,8 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
             log.info("completed internationalStudantsRepository.saveAll(li) {}", li);
         }
         if (examTheme.equalsIgnoreCase("MOCK")){
-            List<InternationalStudants> liMock = internationalStudantsRepository.findByIdSchoolIdAndDemoExam(schoolId, "YES");
-            for (InternationalStudants school : liMock) {
+            List<InternationalStudant> liMock = internationalStudantsRepository.findByIdSchoolIdAndDemoExam(schoolId, "YES");
+            for (InternationalStudant school : liMock) {
 
                 if (school.getDemoSlotDatetime() == null && school.getDemoExam().equalsIgnoreCase("YES")){
                     school.setDemoSlotDatetime(examSlotDateTime + "-" + demoSlotDateTime);
