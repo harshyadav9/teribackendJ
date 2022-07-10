@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Transactional(propagation= Propagation.REQUIRED)
 public class SlotServiceImpl implements SlotService {
 
     Logger log = LoggerFactory.getLogger(SlotServiceImpl.class);
@@ -81,12 +84,14 @@ public class SlotServiceImpl implements SlotService {
                 log.info("internationalStudantsService table is updated with slot timing for school and examtheme {} {}",
                         schoolSlotData.getSchoolId(), schoolSlotData.getExamTheme());
             }
+
             allotedSlotService.saveAll(allotedSlots);
+
             log.info("allotedSlot table is updated successfully", allotedSlots);
+            throw new RuntimeException("test");
 
         }
         log.info("schoolSlotUpdateStatus {}", schoolSlotUpdateStatus);
         return schoolSlotUpdateStatus;
     }
-
 }
