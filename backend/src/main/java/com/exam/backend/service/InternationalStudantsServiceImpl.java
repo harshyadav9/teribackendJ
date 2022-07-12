@@ -98,4 +98,9 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
             log.info("completed internationalStudantsRepository.saveAll(liMock) {}", liMock);
         }
     }
+
+    @Override
+    public void updatePaymentFlagForSchoolsPaid(String schoolId) {
+        internationalStudantsRepository.updatePaymentFlagForSchoolsPaid(schoolId);
+    }
 }

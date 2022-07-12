@@ -12,4 +12,8 @@ public interface InternationalStudantsService {
     List<SchoolSlotData> getSlotsData (String schoolId, String mode);
 
     void updateExamSlotAndDemoSlotDateTime(String schoolId, String examTheme, String examSlotDateTime, String demoSlotDateTime);
+
+    void updatePaymentFlagForSchoolsPaid(String schoolId);
+
+
 }
