@@ -13,7 +13,7 @@ public interface InternationalStudantsService {
 
     void updateExamSlotAndDemoSlotDateTime(String schoolId, String examTheme, String examSlotDateTime, String demoSlotDateTime);
 
-    void updatePaymentFlagForSchoolsPaid(String schoolId);
+    //void updatePaymentFlagForSchoolsPaid(String schoolId);
 
 
 }

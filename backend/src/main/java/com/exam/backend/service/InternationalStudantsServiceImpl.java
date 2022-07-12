@@ -99,8 +99,8 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
         }
     }
 
-    @Override
+    /*@Override
     public void updatePaymentFlagForSchoolsPaid(String schoolId) {
         internationalStudantsRepository.updatePaymentFlagForSchoolsPaid(schoolId);
-    }
+    }*/
 }

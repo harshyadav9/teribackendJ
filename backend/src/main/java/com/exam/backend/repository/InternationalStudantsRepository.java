@@ -20,8 +20,8 @@ public interface InternationalStudantsRepository extends CrudRepository<Internat
 
     List<InternationalStudant> findByIdSchoolIdAndDemoExam(String schoolId, String examTheme);
 
-    @Query(nativeQuery = true, value = "Update InternationalStudants set paymentStatus = 1 where schoolId = :schoolId")
-    @Modifying
-    void updatePaymentFlagForSchoolsPaid(String schoolId);
+//    @Query(nativeQuery = true, value = "Update InternationalStudants set paymentStatus = 1 where schoolId = :schoolId")
+//    @Modifying
+//    void updatePaymentFlagForSchoolsPaid(String schoolId);
 
 }
