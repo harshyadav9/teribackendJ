@@ -61,7 +61,6 @@ public class TerryController {
         return ResponseEntity.status(HttpStatus.OK).body(schoolSlotUpdateStatus);
     }
 
-
     @PostMapping(value = "/updatePaymentDetails")
     public ResponseEntity<String> updatePaymentDetails(@RequestBody PaymentDetailDto paymentDetailDto) {
         log.info("inside updatePaymentDetails() {}", paymentDetailDto);
@@ -69,4 +68,5 @@ public class TerryController {
         log.info("Exiting updatePaymentDetails() {}", string);
         return ResponseEntity.status(HttpStatus.OK).body(string);
     }
+
 }

@@ -15,17 +15,21 @@ import java.math.BigDecimal;
 @ToString
 public class PaymentDetailDto implements Serializable {
 
-    private String schoolID_RollNo;
+    private int orderId;
+
+    private String schoolcode_Rollno;
+
+    private String mode;
 
     private String subscriberType;
 
     private BigDecimal amount;
 
-    private String orderId;
+    private String paymentId;
 
-    private String paymentStatus;
+    private String paymentReceivedStatus;
 
     private String createdBy;
 
-    private String ModifyBy;
+    private String modifyBy;
 }

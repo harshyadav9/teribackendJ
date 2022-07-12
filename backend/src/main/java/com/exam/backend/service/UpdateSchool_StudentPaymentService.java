@@ -28,17 +28,21 @@ public class UpdateSchool_StudentPaymentService {
         //update in paymentDetails and InternationalStudants tabels
         PaymentDetail paymentDetail = new PaymentDetail();
 
-        paymentDetail.setPaymentStatus(paymentDetailDto.getPaymentStatus());
+        paymentDetail.setOrderId(paymentDetailDto.getOrderId());
+        paymentDetail.setPaymentId(paymentDetailDto.getPaymentId());
         paymentDetail.setAmount(paymentDetailDto.getAmount());
         paymentDetail.setCreatedBy(paymentDetailDto.getCreatedBy());
         paymentDetail.setModifyBy(paymentDetailDto.getModifyBy());
-        paymentDetail.setOrderId(paymentDetailDto.getOrderId());
-        paymentDetail.setSchoolID_RollNo(paymentDetailDto.getSchoolID_RollNo());
+        paymentDetail.setSchoolcode_Rollno(paymentDetailDto.getSchoolcode_Rollno());
         paymentDetail.setSubscriberType(paymentDetailDto.getSubscriberType());
+        paymentDetail.setPaymentReceivedStatus(paymentDetailDto.getPaymentReceivedStatus());
+        paymentDetail.setMode(paymentDetailDto.getMode());
 
         paymentDetailService.savePaymentDetail(paymentDetail);
 
-        internationalStudantsService.updatePaymentFlagForSchoolsPaid(paymentDetailDto.getSchoolID_RollNo());
+        if (paymentDetailDto.getPaymentReceivedStatus() != null && paymentDetailDto.getPaymentReceivedStatus().equalsIgnoreCase("Success")){
+            internationalStudantsService.updatePaymentFlagForSchoolsPaid(paymentDetailDto.getSchoolcode_Rollno());
+        }
 
         return "Payment Details Updated Successfully.";
 

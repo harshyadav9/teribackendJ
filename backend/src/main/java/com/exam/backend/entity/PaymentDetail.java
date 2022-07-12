@@ -18,12 +18,14 @@ import java.math.BigDecimal;
 public class PaymentDetail implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PaymentDetailID")
-    private int paymentDetailId;
+    @Column(name = "OrderId")
+    private int orderId;
 
-    @Column(name = "SchoolID_RollNo")
-    private String schoolID_RollNo;
+    @Column(name = "Schoolcode_Rollno")
+    private String schoolcode_Rollno;
+
+    @Column(name = "Mode")
+    private String mode;
 
     @Column(name = "SubscriberType")
     private String subscriberType;
@@ -31,15 +33,15 @@ public class PaymentDetail implements Serializable {
     @Column(name = "Amount")
     private BigDecimal amount;
 
-    @Column(name = "OrderId")
-    private String orderId;
+    @Column(name = "PaymentID")
+    private String paymentId;
 
-    @Column(name = "PaymentStatus")
-    private String paymentStatus;
+    @Column(name = "PaymentReceivedStatus")
+    private String paymentReceivedStatus;
 
     @Column(name = "CreatedBy")
     private String createdBy;
 
-    @Column(name = "modifyBy")
-    private String ModifyBy;
+    @Column(name = "ModifyBy")
+    private String modifyBy;
 }
