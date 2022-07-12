@@ -5,17 +5,18 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
-import java.sql.Date;
 
 @Entity
-@Table(name = "AllotedSlot")
+@Table(name = "PaymentStatus")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
 @ToString
-public class AllotedSlot implements Serializable {
+public class PaymentStatus implements Serializable {
 
     @EmbeddedId
     private AllotedSlotId id;
