@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table(name = "InternationalStudants")
@@ -49,4 +51,11 @@ public class InternationalStudant implements Serializable {
     @Column(name = "StudentID")
     private String studentId;
 
+    @Column(name = "Rollno")
+    private String rollNo;
+
+    @Column(name = "updateTimestamp")
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updateTimeStamp;
 }

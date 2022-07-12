@@ -1,9 +1,6 @@
 package com.exam.backend.service;
 
-import com.exam.backend.entity.InternationalStudant;
-import com.exam.backend.entity.InternationalStudantsId;
-import com.exam.backend.entity.SchoolSlotData;
-import com.exam.backend.entity.StudentClass;
+import com.exam.backend.entity.*;
 import com.exam.backend.pojo.InternationalStudantsDto;
 import com.exam.backend.repository.InternationalStudantsRepository;
 import org.slf4j.Logger;
@@ -12,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,7 +68,6 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
         return li;
     }
 
-
     @Override
     public void updateExamSlotAndDemoSlotDateTime(String schoolId, String examTheme, String examSlotDateTime, String demoSlotDateTime) {
         log.info("Inside updateExamSlotAndDemoSlotDateTime() {} {} {} {}", schoolId, examTheme, examSlotDateTime, demoSlotDateTime);
@@ -99,8 +96,54 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
         }
     }
 
-    /*@Override
-    public void updatePaymentFlagForSchoolsPaid(String schoolId) {
-        internationalStudantsRepository.updatePaymentFlagForSchoolsPaid(schoolId);
-    }*/
+    @Override
+    public String generateAndUpdateRollNumberForSchoolStudent(String schoolId) {
+        log.info("Inside generateAndUpdateRollNumberForSchoolStudent() {}", schoolId);
+        List<InternationalStudant> studentsToBeUpdatedForASchool = internationalStudantsRepository.findAllByIdSchoolIdAndPaymentStatusAndRollNoNull(schoolId, true);
+
+        if (studentsToBeUpdatedForASchool.size() == 0) {
+            log.info("Nothing to update for schoolId {}", schoolId);
+            return "Nothing to update";
+
+        }
+
+        long checkIfSchoolHasRollNumber = internationalStudantsRepository.countByIdSchoolIdAndPaymentStatusAndRollNoNotNull(schoolId, true);
+        log.info("checkIfSchoolHasRollNumber for schoolid {} {}", checkIfSchoolHasRollNumber, schoolId);
+        RollNumberData rollNumberData = internationalStudantsRepository.getSchoolDataForGivenSchool(schoolId);
+
+        if (checkIfSchoolHasRollNumber > 0 ){
+            String rollNum = internationalStudantsRepository.findRollNumberForAlreadyPaidSchool(schoolId, true);
+            final DecimalFormat decimalFormat = new DecimalFormat("0000");
+            Integer last4Digits = generateRollNumber(rollNum);
+            for (InternationalStudant internationalStudant : studentsToBeUpdatedForASchool){
+                internationalStudant.setRollNo(createRollNumberPattern(decimalFormat.format(++last4Digits), rollNumberData));
+            }
+
+        }else {
+            final DecimalFormat decimalFormat = new DecimalFormat("0000");
+            Integer rollNumberVal = 0000;
+            for (InternationalStudant internationalStudant : studentsToBeUpdatedForASchool){
+                internationalStudant.setRollNo(createRollNumberPattern(decimalFormat.format(++rollNumberVal), rollNumberData));
+            }
+
+        }
+        log.info("schoolsToBeUpdated {}", studentsToBeUpdatedForASchool);
+        internationalStudantsRepository.saveAll(studentsToBeUpdatedForASchool);
+        return "Roll Numbers updated Successfully.";
+
+    }
+
+    private Integer generateRollNumber(String rollNum){
+        log.info("generateRollNumber() for rollNumber {}", rollNum);
+        Integer last4digits = Integer.valueOf(rollNum.substring(rollNum.length()-5));
+        return last4digits;
+
+    }
+
+    private String createRollNumberPattern(String last4digits, RollNumberData rollNumberData){
+
+        String finalRollNumber = rollNumberData.getCountryCode()+rollNumberData.getYear()+rollNumberData.getStateCode()+rollNumberData.getSchoolNumber()+last4digits;
+        log.info("createRollNumberPattern() finalRollNumber{}", finalRollNumber);
+        return finalRollNumber;
+    }
 }

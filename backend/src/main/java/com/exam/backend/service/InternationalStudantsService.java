@@ -1,5 +1,6 @@
 package com.exam.backend.service;
 
+import com.exam.backend.entity.InternationalStudant;
 import com.exam.backend.entity.SchoolSlotData;
 import com.exam.backend.pojo.InternationalStudantsDto;
 
@@ -13,7 +14,6 @@ public interface InternationalStudantsService {
 
     void updateExamSlotAndDemoSlotDateTime(String schoolId, String examTheme, String examSlotDateTime, String demoSlotDateTime);
 
-    //void updatePaymentFlagForSchoolsPaid(String schoolId);
-
+    String generateAndUpdateRollNumberForSchoolStudent(String schoolId);
 
 }

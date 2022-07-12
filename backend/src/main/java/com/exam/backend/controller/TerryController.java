@@ -1,10 +1,8 @@
 package com.exam.backend.controller;
 
 import com.exam.backend.entity.SchoolSlotData;
-import com.exam.backend.pojo.InternationalStudantsDto;
-import com.exam.backend.pojo.PaymentDetailDto;
-import com.exam.backend.pojo.SchoolSlotDataIncoming;
-import com.exam.backend.pojo.SchoolSlotUpdateStatus;
+import com.exam.backend.pojo.*;
+import com.exam.backend.service.InternationalStudantsServiceImpl;
 import com.exam.backend.service.SaveDataToDb;
 import com.exam.backend.service.SlotServiceImpl;
 import com.exam.backend.service.UpdateSchool_StudentPaymentService;
@@ -27,13 +25,16 @@ public class TerryController {
     private final SaveDataToDb saveDataToDb;
     private final SlotServiceImpl slotService;
     private final UpdateSchool_StudentPaymentService updateSchool_studentPaymentService;
+    private final InternationalStudantsServiceImpl internationalStudantsService;
 
     @Autowired
-    public TerryController(SaveDataToDb saveDataToDb, SlotServiceImpl slotService, UpdateSchool_StudentPaymentService updateSchool_studentPaymentService) {
+    public TerryController(SaveDataToDb saveDataToDb, SlotServiceImpl slotService, UpdateSchool_StudentPaymentService updateSchool_studentPaymentService,
+                           InternationalStudantsServiceImpl internationalStudantsService) {
 
         this.saveDataToDb = saveDataToDb;
         this.slotService = slotService;
         this.updateSchool_studentPaymentService = updateSchool_studentPaymentService;
+        this.internationalStudantsService = internationalStudantsService;
     }
 
     @PostMapping(value = "/uploadData")
@@ -66,6 +67,14 @@ public class TerryController {
         String string = updateSchool_studentPaymentService.updatePaymentData(paymentDetailDto);
         log.info("Exiting updatePaymentDetails() {}", string);
         return ResponseEntity.status(HttpStatus.OK).body(string);
+    }
+
+    @PostMapping(value = "/generateRollNumber")
+    public ResponseEntity<String> generateRollNumber(@RequestBody RollNumberDto rollNumberDto) {
+        log.info("inside generateRollNumber() {}", rollNumberDto);
+        internationalStudantsService.generateAndUpdateRollNumberForSchoolStudent(rollNumberDto.getSchoolId());
+        log.info("Exiting generateRollNumber() {}", rollNumberDto);
+        return ResponseEntity.status(HttpStatus.OK).body("Roll Numbers are updated successfully.");
     }
 
 }

@@ -24,8 +24,7 @@ public class UpdateSchool_StudentPaymentService {
     }
 
     public String updatePaymentData(PaymentDetailDto paymentDetailDto){
-
-        //update in paymentDetails and InternationalStudants tabels
+        log.info("Inside updatePaymentData() {}", paymentDetailDto.getOrderId());
         PaymentDetail paymentDetail = new PaymentDetail();
 
         paymentDetail.setOrderId(paymentDetailDto.getOrderId());
@@ -39,18 +38,8 @@ public class UpdateSchool_StudentPaymentService {
         paymentDetail.setMode(paymentDetailDto.getMode());
 
         paymentDetailService.savePaymentDetail(paymentDetail);
-
-//        if (paymentDetailDto.getPaymentReceivedStatus() != null && paymentDetailDto.getPaymentReceivedStatus().equalsIgnoreCase("Success")){
-//            internationalStudantsService.updatePaymentFlagForSchoolsPaid(paymentDetailDto.getSchoolcode_Rollno());
-//
-//        }
-
+        log.info("Saved payment details successfully in updatePaymentData() {}", paymentDetailDto.getOrderId());
         return "Payment Details Updated Successfully.";
     }
-
-    public void generateRollNumber(){
-
-    }
-
 
 }

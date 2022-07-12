@@ -24,7 +24,9 @@ public class PaymentDetailServiceImpl implements  PaymentDetailService{
 
     @Override
     public void savePaymentDetail(PaymentDetail paymentDetail) {
+        log.info("Inside savePaymentDetail() {}", paymentDetail.getOrderId());
         paymentDetailRepository.save(paymentDetail);
+        log.info("Completed savePaymentDetail() {}", paymentDetail.getOrderId());
 
     }
 }
