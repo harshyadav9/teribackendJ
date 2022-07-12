@@ -42,9 +42,14 @@ public class UpdateSchool_StudentPaymentService {
 
         if (paymentDetailDto.getPaymentReceivedStatus() != null && paymentDetailDto.getPaymentReceivedStatus().equalsIgnoreCase("Success")){
             internationalStudantsService.updatePaymentFlagForSchoolsPaid(paymentDetailDto.getSchoolcode_Rollno());
+
         }
 
         return "Payment Details Updated Successfully.";
+
+    }
+
+    public void generateRollNumber(){
 
     }
 

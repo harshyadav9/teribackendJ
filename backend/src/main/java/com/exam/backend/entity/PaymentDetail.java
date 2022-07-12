@@ -19,7 +19,7 @@ public class PaymentDetail implements Serializable {
 
     @Id
     @Column(name = "OrderId")
-    private int orderId;
+    private String orderId;
 
     @Column(name = "Schoolcode_Rollno")
     private String schoolcode_Rollno;

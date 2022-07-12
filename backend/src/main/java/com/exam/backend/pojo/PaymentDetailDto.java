@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @ToString
 public class PaymentDetailDto implements Serializable {
 
-    private int orderId;
+    private String orderId;
 
     private String schoolcode_Rollno;
 
