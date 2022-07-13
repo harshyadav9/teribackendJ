@@ -4,5 +4,5 @@ import com.exam.backend.pojo.SchoolDto;
 
 public interface SchoolService {
 
-    void updatePassword(SchoolDto rollNumberDto);
+    String updatePassword(SchoolDto rollNumberDto);
 }

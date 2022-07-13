@@ -14,6 +14,6 @@ public interface SchoolRepository extends CrudRepository<School, String> {
 
     @Query(nativeQuery = true, value = "Update Schools set password = :password where schoolsCode = :schoolId")
     @Modifying
-    void updatePassword(String password, String schoolId);
+    int updatePassword(String password, String schoolId);
 
 }

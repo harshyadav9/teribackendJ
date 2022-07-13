@@ -27,7 +27,7 @@ public class TerryController {
 
     @Autowired
     public TerryController(SaveDataToDb saveDataToDb, SlotServiceImpl slotService, UpdateSchool_StudentPaymentService updateSchool_studentPaymentService,
-                           InternationalStudantsServiceImpl internationalStudantsService,SchoolServiceImpl schoolService) {
+                           InternationalStudantsServiceImpl internationalStudantsService, SchoolServiceImpl schoolService) {
 
         this.saveDataToDb = saveDataToDb;
         this.slotService = slotService;
@@ -79,9 +79,14 @@ public class TerryController {
     @PostMapping(value = "/changePassword")
     public ResponseEntity<String> changePassword(@RequestBody SchoolDto rollNumberDto) {
         log.info("inside changePassword() {}", rollNumberDto);
-        schoolService.updatePassword(rollNumberDto);
+        String resp = schoolService.updatePassword(rollNumberDto);
         log.info("Exiting changePassword() {}", rollNumberDto);
-        return ResponseEntity.status(HttpStatus.OK).body("Password is Updated Successfully.");
+        if (resp.equals("Invalid schoolId.Password Update failed.")) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resp);
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body("Password is Updated Successfully.");
+        }
+
     }
 
 }

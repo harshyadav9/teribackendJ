@@ -1,5 +1,6 @@
 package com.exam.backend.service;
 
+import com.exam.backend.entity.School;
 import com.exam.backend.pojo.InternationalStudantsDto;
 import com.exam.backend.pojo.SchoolDto;
 import com.exam.backend.repository.SchoolRepository;
@@ -26,10 +27,21 @@ public class SchoolServiceImpl implements SchoolService{
     }
 
     @Override
-    public void updatePassword(SchoolDto rollNumberDto) {
+    public String updatePassword(SchoolDto rollNumberDto) {
         log.info("Inside updatePassword() {}", rollNumberDto);
-        schoolRepository.updatePassword(rollNumberDto.getNewPassword(), rollNumberDto.getSchoolId());
-        log.info("Completed updatePassword() {}", rollNumberDto);
+
+        School school = new School();
+        school.setSchoolsCode(rollNumberDto.getSchoolId());
+        school.setPassword(rollNumberDto.getNewPassword());
+        int i = schoolRepository.updatePassword(rollNumberDto.getNewPassword(), rollNumberDto.getSchoolId());
+       if (i != 0){
+           log.info("Completed updatePassword() {}", rollNumberDto);
+           return "Password is updated successfully.";
+
+       }else{
+           log.info("Invalid schoolId");
+           return "Invalid schoolId.Password Update failed.";
+       }
 
     }
 }
