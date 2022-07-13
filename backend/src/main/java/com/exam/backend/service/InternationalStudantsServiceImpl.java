@@ -119,13 +119,12 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
                 internationalStudant.setRollNo(createRollNumberPattern(decimalFormat.format(++last4Digits), rollNumberData));
             }
 
-        }else {
+        } else {
             final DecimalFormat decimalFormat = new DecimalFormat("0000");
             Integer rollNumberVal = 0000;
             for (InternationalStudant internationalStudant : studentsToBeUpdatedForASchool){
                 internationalStudant.setRollNo(createRollNumberPattern(decimalFormat.format(++rollNumberVal), rollNumberData));
             }
-
         }
         log.info("schoolsToBeUpdated {}", studentsToBeUpdatedForASchool);
         internationalStudantsRepository.saveAll(studentsToBeUpdatedForASchool);

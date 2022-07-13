@@ -1,5 +1,7 @@
 package com.exam.backend.controller;
 
+import com.exam.backend.entity.IndividualStudent;
+import com.exam.backend.entity.IndividualStudentPaymentData;
 import com.exam.backend.entity.SchoolSlotData;
 import com.exam.backend.pojo.*;
 import com.exam.backend.service.*;
@@ -24,16 +26,20 @@ public class TerryController {
     private final UpdateSchool_StudentPaymentService updateSchool_studentPaymentService;
     private final InternationalStudantsServiceImpl internationalStudantsService;
     private final SchoolServiceImpl schoolService;
+    private final IndividualStudentServiceImpl individualStudentService;
+    private final PaymentDetailServiceImpl paymentDetailService;
 
     @Autowired
     public TerryController(SaveDataToDb saveDataToDb, SlotServiceImpl slotService, UpdateSchool_StudentPaymentService updateSchool_studentPaymentService,
-                           InternationalStudantsServiceImpl internationalStudantsService, SchoolServiceImpl schoolService) {
+                           InternationalStudantsServiceImpl internationalStudantsService, SchoolServiceImpl schoolService, IndividualStudentServiceImpl individualStudentService, PaymentDetailServiceImpl paymentDetailService) {
 
         this.saveDataToDb = saveDataToDb;
         this.slotService = slotService;
         this.updateSchool_studentPaymentService = updateSchool_studentPaymentService;
         this.internationalStudantsService = internationalStudantsService;
         this.schoolService = schoolService;
+        this.individualStudentService = individualStudentService;
+        this.paymentDetailService = paymentDetailService;
     }
 
     @PostMapping(value = "/uploadData")
@@ -89,4 +95,45 @@ public class TerryController {
 
     }
 
+    @PostMapping(value = "/registerStudent")
+    public ResponseEntity<String> registerStudent(@RequestBody IndividualStudentDto individualStudentDto) {
+        log.info("inside registerStudent() {}", individualStudentDto);
+        individualStudentService.saveStudent(individualStudentDto);
+        log.info("Exiting registerStudent() {}", individualStudentDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Student is Registered Successfully.");
+
+    }
+
+    @GetMapping(value = "/viewIndividualStudentDetails")
+    public ResponseEntity<IndividualStudent> viewIndividualStudentDetails(@RequestParam String rollNumber) {
+        log.info("inside viewIndividualStudentDetails() {}", rollNumber);
+        IndividualStudent student = individualStudentService.getIndividualStudentDetail(rollNumber);
+
+        log.info("Exiting viewIndividualStudentDetails() {}", student);
+        if (student != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(student);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new IndividualStudent());
+        }
+
+    }
+
+    @PostMapping(value = "/updateIndividualStudentDetails")
+    public ResponseEntity<String> updateIndividualStudentDetails(@RequestBody IndividualStudent individualStudent) {
+        log.info("inside updateIndividualStudentDetails() {}", individualStudent);
+        individualStudentService.updateIndividualStudentData(individualStudent);
+
+        log.info("Exiting updateIndividualStudentDetails()");
+        return ResponseEntity.status(HttpStatus.OK).body("Individual Student Data updated successfully");
+    }
+
+    @GetMapping(value = "/getPaymentDetailsForIndividualStudent")
+    public ResponseEntity<IndividualStudentPaymentData> getPaymentDetailsForIndividualStudent(@RequestParam String rollNumber) {
+        log.info("inside getPaymentDetailsForIndividualStudent() {}", rollNumber);
+        IndividualStudentPaymentData individualStudentPaymentData = paymentDetailService.getPaymentDetailForIndiStudent(rollNumber);
+
+        log.info("Exiting getPaymentDetailsForIndividualStudent()");
+        return ResponseEntity.status(HttpStatus.OK).body(individualStudentPaymentData);
+    }
 }

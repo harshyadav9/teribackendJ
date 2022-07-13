@@ -1,5 +1,6 @@
 package com.exam.backend.service;
 
+import com.exam.backend.entity.IndividualStudentPaymentData;
 import com.exam.backend.entity.PaymentDetail;
 import com.exam.backend.repository.PaymentDetailRepository;
 import org.slf4j.Logger;
@@ -27,6 +28,13 @@ public class PaymentDetailServiceImpl implements  PaymentDetailService{
         log.info("Inside savePaymentDetail() {}", paymentDetail.getOrderId());
         paymentDetailRepository.save(paymentDetail);
         log.info("Completed savePaymentDetail() {}", paymentDetail.getOrderId());
+
+    }
+
+    @Override
+    public IndividualStudentPaymentData getPaymentDetailForIndiStudent(String rollNumber) {
+
+       return paymentDetailRepository.getData(rollNumber);
 
     }
 }
