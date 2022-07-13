@@ -2,10 +2,7 @@ package com.exam.backend.controller;
 
 import com.exam.backend.entity.SchoolSlotData;
 import com.exam.backend.pojo.*;
-import com.exam.backend.service.InternationalStudantsServiceImpl;
-import com.exam.backend.service.SaveDataToDb;
-import com.exam.backend.service.SlotServiceImpl;
-import com.exam.backend.service.UpdateSchool_StudentPaymentService;
+import com.exam.backend.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +23,17 @@ public class TerryController {
     private final SlotServiceImpl slotService;
     private final UpdateSchool_StudentPaymentService updateSchool_studentPaymentService;
     private final InternationalStudantsServiceImpl internationalStudantsService;
+    private final SchoolServiceImpl schoolService;
 
     @Autowired
     public TerryController(SaveDataToDb saveDataToDb, SlotServiceImpl slotService, UpdateSchool_StudentPaymentService updateSchool_studentPaymentService,
-                           InternationalStudantsServiceImpl internationalStudantsService) {
+                           InternationalStudantsServiceImpl internationalStudantsService,SchoolServiceImpl schoolService) {
 
         this.saveDataToDb = saveDataToDb;
         this.slotService = slotService;
         this.updateSchool_studentPaymentService = updateSchool_studentPaymentService;
         this.internationalStudantsService = internationalStudantsService;
+        this.schoolService = schoolService;
     }
 
     @PostMapping(value = "/uploadData")
@@ -70,11 +69,19 @@ public class TerryController {
     }
 
     @PostMapping(value = "/generateRollNumber")
-    public ResponseEntity<String> generateRollNumber(@RequestBody RollNumberDto rollNumberDto) {
+    public ResponseEntity<String> generateRollNumber(@RequestBody SchoolDto rollNumberDto) {
         log.info("inside generateRollNumber() {}", rollNumberDto);
         internationalStudantsService.generateAndUpdateRollNumberForSchoolStudent(rollNumberDto.getSchoolId());
         log.info("Exiting generateRollNumber() {}", rollNumberDto);
         return ResponseEntity.status(HttpStatus.OK).body("Roll Numbers are updated successfully.");
+    }
+
+    @PostMapping(value = "/changePassword")
+    public ResponseEntity<String> changePassword(@RequestBody SchoolDto rollNumberDto) {
+        log.info("inside changePassword() {}", rollNumberDto);
+        schoolService.updatePassword(rollNumberDto);
+        log.info("Exiting changePassword() {}", rollNumberDto);
+        return ResponseEntity.status(HttpStatus.OK).body("Password is Updated Successfully.");
     }
 
 }
