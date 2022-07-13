@@ -18,7 +18,7 @@ public class IndividualStudent implements Serializable {
 
     @Id
     @Column(name = "RollNo")
-    private String rollNumber;
+    private String rollNo;
 
     @Column(name = "Password")
     private String password;

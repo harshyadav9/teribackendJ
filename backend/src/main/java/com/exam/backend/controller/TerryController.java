@@ -2,6 +2,7 @@ package com.exam.backend.controller;
 
 import com.exam.backend.entity.IndividualStudent;
 import com.exam.backend.entity.IndividualStudentPaymentData;
+import com.exam.backend.entity.IndividualStudentSlotData;
 import com.exam.backend.entity.SchoolSlotData;
 import com.exam.backend.pojo.*;
 import com.exam.backend.service.*;
@@ -92,7 +93,6 @@ public class TerryController {
         } else {
             return ResponseEntity.status(HttpStatus.OK).body("Password is Updated Successfully.");
         }
-
     }
 
     @PostMapping(value = "/registerStudent")
@@ -116,7 +116,6 @@ public class TerryController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new IndividualStudent());
         }
-
     }
 
     @PostMapping(value = "/updateIndividualStudentDetails")
@@ -135,5 +134,21 @@ public class TerryController {
 
         log.info("Exiting getPaymentDetailsForIndividualStudent()");
         return ResponseEntity.status(HttpStatus.OK).body(individualStudentPaymentData);
+    }
+
+    @GetMapping(value = "/getSlotsDataForIndividualStudent")
+    public ResponseEntity<List<IndividualStudentSlotData>> getSlotsDataForIndividualStudent(@RequestParam String rollNumber, @RequestParam String mode) {
+        log.info("inside getSlotsDataForIndividualStudent() {} {}", rollNumber, mode);
+        List<IndividualStudentSlotData> li = individualStudentService.getSlotsDataForIndvStudents(rollNumber, mode);
+        log.info("Exiting getSlotsDataForIndividualStudent() {}", li);
+        return ResponseEntity.status(HttpStatus.OK).body(li);
+    }
+
+    @PostMapping(value = "/updateSlotsDataForIndividualStudent")
+    public ResponseEntity<SchoolSlotUpdateStatus> updateSlotsDataForIndividualStudent(@RequestBody List<IndividualStudentSlotDataDto> incomingData) {
+        log.info("inside updateSlotsDataForIndividualStudent() {}", incomingData);
+        SchoolSlotUpdateStatus schoolSlotUpdateStatus = slotService.updateSlotDataForIndvStudents(incomingData);
+        log.info("Exiting updateSlotsDataForIndividualStudent() {}", schoolSlotUpdateStatus);
+        return ResponseEntity.status(HttpStatus.OK).body(schoolSlotUpdateStatus);
     }
 }

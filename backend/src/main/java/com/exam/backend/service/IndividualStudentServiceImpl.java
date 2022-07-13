@@ -1,6 +1,8 @@
 package com.exam.backend.service;
 
 import com.exam.backend.entity.IndividualStudent;
+import com.exam.backend.entity.IndividualStudentSlotData;
+import com.exam.backend.entity.InternationalStudant;
 import com.exam.backend.pojo.IndividualStudentDto;
 import com.exam.backend.repository.IndividualStudentRepository;
 import org.slf4j.Logger;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 @Service
 @Transactional
@@ -56,11 +59,11 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
         final DecimalFormat decimalFormat = new DecimalFormat("0000");
         if (last4digits != null) {
             String rollNum = generateIndividualStudentRollNumber(studentDto.getRollNoPrefix(), decimalFormat.format(++last4digits));
-            individualStudent.setRollNumber(rollNum);
+            individualStudent.setRollNo(rollNum);
         } else {
             Integer last4digits1 = 0000;
             String rollNum = generateIndividualStudentRollNumber(studentDto.getRollNoPrefix(), decimalFormat.format(++last4digits1));
-            individualStudent.setRollNumber(rollNum);
+            individualStudent.setRollNo(rollNum);
         }
         individualStudentRepository.save(individualStudent);
         log.info("Completed saveStudent() {}", studentDto);
@@ -70,7 +73,7 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
     @Override
     public IndividualStudent getIndividualStudentDetail(String rollNumber) {
         log.info("getIndividualStudentDetail() {}", rollNumber);
-        IndividualStudent individualStudent = individualStudentRepository.findByRollNumber(rollNumber);
+        IndividualStudent individualStudent = individualStudentRepository.findByRollNo(rollNumber);
         log.info("Completed getIndividualStudentDetail() {}", individualStudent);
         return individualStudent;
     }
@@ -82,10 +85,33 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
         log.info("Completed updateIndividualStudentData() {}", individualStudent);
     }
 
+    @Override
+    public List<IndividualStudentSlotData> getSlotsDataForIndvStudents(String rollNumber, String mode) {
+        return individualStudentRepository.getSlotDataForIndvStudents(rollNumber, mode);
+    }
+
     public String generateIndividualStudentRollNumber(String rollNumberPrefix, String runningNumber) {
         log.info("generateIndividualStudentRollNumber() {} {} {}", rollNumberPrefix, runningNumber);
-        return rollNumberPrefix+runningNumber;
+        return rollNumberPrefix + runningNumber;
 
+    }
+
+    @Override
+    public void updateExamSlotAndDemoSlotDateTimeForIndvStudent(String rollNumber, String examTheme, String examSlotDateTime, String demoSlotDateTime) {
+        log.info("Inside updateExamSlotAndDemoSlotDateTimeForIndvStudent() {} {} {} {}", rollNumber, examTheme, examSlotDateTime, demoSlotDateTime);
+        if (!examTheme.equalsIgnoreCase("MOCK")){
+            IndividualStudent individualStudent = individualStudentRepository.findByRollNo(rollNumber);
+            individualStudent.setExamSlotDateTime(examSlotDateTime + "-" + demoSlotDateTime);
+
+            individualStudentRepository.save(individualStudent);
+            log.info("completed updateExamSlotAndDemoSlotDateTimeForIndvStudent.save(individualStudent) {}", individualStudent);
+        }
+        if (examTheme.equalsIgnoreCase("MOCK")){
+            IndividualStudent individualStudent = individualStudentRepository.findByRollNoAndDemoExam(rollNumber, "YES");
+            individualStudent.setDemoSlotDateTime(examSlotDateTime + "-" + demoSlotDateTime);
+            individualStudentRepository.save(individualStudent);
+            log.info("completed updateExamSlotAndDemoSlotDateTimeForIndvStudent.save(individualStudent) {}", individualStudent);
+        }
     }
 
 }

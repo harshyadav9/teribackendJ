@@ -1,6 +1,7 @@
 package com.exam.backend.service;
 
 import com.exam.backend.entity.SchoolSlotData;
+import com.exam.backend.pojo.IndividualStudentSlotDataDto;
 import com.exam.backend.pojo.SchoolSlotDataIncoming;
 import com.exam.backend.pojo.SchoolSlotUpdateStatus;
 
@@ -11,4 +12,6 @@ public interface SlotService {
     List<SchoolSlotData> getSlotsData(String schoolId, String mode);
 
     SchoolSlotUpdateStatus updateSlotData(List<SchoolSlotDataIncoming> data);
+
+    SchoolSlotUpdateStatus updateSlotDataForIndvStudents(List<IndividualStudentSlotDataDto> data);
 }

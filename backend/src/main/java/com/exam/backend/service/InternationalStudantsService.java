@@ -1,6 +1,5 @@
 package com.exam.backend.service;
 
-import com.exam.backend.entity.InternationalStudant;
 import com.exam.backend.entity.SchoolSlotData;
 import com.exam.backend.pojo.InternationalStudantsDto;
 
