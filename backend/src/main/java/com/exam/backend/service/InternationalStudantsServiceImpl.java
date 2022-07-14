@@ -69,19 +69,23 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
     }
 
     @Override
-    public void updateExamSlotAndDemoSlotDateTime(String schoolId, String examTheme, String examSlotDateTime, String demoSlotDateTime) {
+    public int updateExamSlotAndDemoSlotDateTime(String schoolId, String examTheme, String examSlotDateTime, String demoSlotDateTime) {
         log.info("Inside updateExamSlotAndDemoSlotDateTime() {} {} {} {}", schoolId, examTheme, examSlotDateTime, demoSlotDateTime);
+        int counter = 0;
         if (!examTheme.equalsIgnoreCase("MOCK")){
+
             List<InternationalStudant> li = internationalStudantsRepository.findByIdSchoolIdAndExamTheme(schoolId, examTheme);
             for (InternationalStudant school : li) {
                 if (school.getExamSlotDatetime() == null){
                     school.setExamSlotDatetime(examSlotDateTime + "-" + demoSlotDateTime);
+                    counter++;
                 }
 
             }
-            log.info("li inside updateExamSlotAndDemoSlotDateTime() {}", li);
-            internationalStudantsRepository.saveAll(li);
-            log.info("completed internationalStudantsRepository.saveAll(li) {}", li);
+            if (counter > 0){
+                internationalStudantsRepository.saveAll(li);
+                log.info("completed internationalStudantsRepository.saveAll(li) {}", li);
+            }
         }
         if (examTheme.equalsIgnoreCase("MOCK")){
             List<InternationalStudant> liMock = internationalStudantsRepository.findByIdSchoolIdAndDemoExam(schoolId, "YES");
@@ -89,11 +93,17 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
 
                 if (school.getDemoSlotDatetime() == null && school.getDemoExam().equalsIgnoreCase("YES")){
                     school.setDemoSlotDatetime(examSlotDateTime + "-" + demoSlotDateTime);
+                    counter++;
+
                 }
             }
-            internationalStudantsRepository.saveAll(liMock);
-            log.info("completed internationalStudantsRepository.saveAll(liMock) {}", liMock);
+            if (counter > 0){
+                internationalStudantsRepository.saveAll(liMock);
+                log.info("completed internationalStudantsRepository.saveAll(liMock) {}", liMock);
+            }
+
         }
+        return counter;
     }
 
     @Override

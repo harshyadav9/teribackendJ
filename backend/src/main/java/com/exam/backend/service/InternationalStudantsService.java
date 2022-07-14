@@ -11,7 +11,7 @@ public interface InternationalStudantsService {
 
     List<SchoolSlotData> getSlotsData (String schoolId, String mode);
 
-    void updateExamSlotAndDemoSlotDateTime(String schoolId, String examTheme, String examSlotDateTime, String demoSlotDateTime);
+    int updateExamSlotAndDemoSlotDateTime(String schoolId, String examTheme, String examSlotDateTime, String demoSlotDateTime);
 
     String generateAndUpdateRollNumberForSchoolStudent(String schoolId);
 

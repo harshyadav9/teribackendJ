@@ -49,22 +49,19 @@ public class SlotServiceImpl implements SlotService {
         SchoolSlotUpdateStatus schoolSlotUpdateStatus = new SchoolSlotUpdateStatus();
         Map<String,String> mp = new HashMap<>();
 
-        List<Slot> slots = new ArrayList<>();
-        List<AllotedSlot> allotedSlots = new ArrayList<>();
-
         for (SchoolSlotDataIncoming schoolSlotData : data){
             Slot slot = slotRepository.findBySlotId(schoolSlotData.getSlotId());
             if (slot.getSeatAvailable() > schoolSlotData.getStudentCount()){
                 slot.setSeatAvailable(slot.getSeatAvailable() - schoolSlotData.getStudentCount());
-                slots.add(slot);
 
-                AllotedSlot allotedSlot = new AllotedSlot();
-                AllotedSlotId id = new AllotedSlotId();
-                id.setSlotId(slot.getSlotId());
-                id.setAllotedSchoolId(schoolSlotData.getSchoolId());
-                allotedSlot.setId(id);
-                allotedSlots.add(allotedSlot);
-                log.info("alloted slots Inside updateSlotData(){}", allotedSlots);
+                int counter = internationalStudantsService.updateExamSlotAndDemoSlotDateTime(schoolSlotData.getSchoolId(), schoolSlotData.getExamTheme(),
+                        String.valueOf(schoolSlotData.getDateOfExam()), schoolSlotData.getSlotDatetime() );
+                log.info("internationalStudantsService table is updated with slot timing for school and examtheme {} {}",
+                        schoolSlotData.getSchoolId(), schoolSlotData.getExamTheme());
+                if (counter > 0){
+                    slotRepository.save(slot);
+                    log.info("slot() saved in slot table {}", slot);
+                }
             }
             else {
                 mp.put("Error", "Slot selected for examTheme " + slot.getExamTheme() + " is not having required available seats.");
@@ -77,18 +74,6 @@ public class SlotServiceImpl implements SlotService {
             return schoolSlotUpdateStatus;
         } else {
             log.info("schoolSlotUpdateStatus is not errored");
-            slotRepository.saveAll(slots);
-            log.info("slots() save in slot table {}", slots);
-            for (SchoolSlotDataIncoming schoolSlotData: data){
-
-                internationalStudantsService.updateExamSlotAndDemoSlotDateTime(schoolSlotData.getSchoolId(), schoolSlotData.getExamTheme(),
-                        String.valueOf(schoolSlotData.getDateOfExam()), schoolSlotData.getSlotDatetime() );
-                log.info("internationalStudantsService table is updated with slot timing for school and examtheme {} {}",
-                        schoolSlotData.getSchoolId(), schoolSlotData.getExamTheme());
-            }
-            allotedSlotService.saveAll(allotedSlots);
-            log.info("allotedSlot table is updated successfully", allotedSlots);
-
             mp.put("Success", "Slot is booked successfully.");
             schoolSlotUpdateStatus.setStatus(mp);
             return schoolSlotUpdateStatus;
