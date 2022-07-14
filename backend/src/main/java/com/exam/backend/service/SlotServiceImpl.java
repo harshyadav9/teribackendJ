@@ -90,6 +90,8 @@ public class SlotServiceImpl implements SlotService {
 
         }
         log.info("schoolSlotUpdateStatus {}", schoolSlotUpdateStatus);
+        mp.put("Success", "Slot is booked successfully.");
+        schoolSlotUpdateStatus.setStatus(mp);
         return schoolSlotUpdateStatus;
     }
 

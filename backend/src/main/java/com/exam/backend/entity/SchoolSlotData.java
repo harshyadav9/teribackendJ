@@ -8,4 +8,16 @@ public interface SchoolSlotData {
 
     String getSchoolId();
 
+    int getStudentCount();
+
+    int getSlotId();
+
+    String getDateOfExam();
+
+    int getSeatAvailable();
+
+    String getSlotDatetime();
+
+    int getTotalSeat();
+
 }
