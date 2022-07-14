@@ -73,8 +73,9 @@ public class SlotServiceImpl implements SlotService {
                 log.info("Error slots mismatch with avaialable seats");
             }
         }
-
-        if (!schoolSlotUpdateStatus.isErrored()){
+        if (schoolSlotUpdateStatus.isErrored()){
+            return schoolSlotUpdateStatus;
+        } else {
             log.info("schoolSlotUpdateStatus is not errored");
             slotRepository.saveAll(slots);
             log.info("slots() save in slot table {}", slots);
@@ -88,11 +89,11 @@ public class SlotServiceImpl implements SlotService {
             allotedSlotService.saveAll(allotedSlots);
             log.info("allotedSlot table is updated successfully", allotedSlots);
 
+            mp.put("Success", "Slot is booked successfully.");
+            schoolSlotUpdateStatus.setStatus(mp);
+            return schoolSlotUpdateStatus;
+
         }
-        log.info("schoolSlotUpdateStatus {}", schoolSlotUpdateStatus);
-        mp.put("Success", "Slot is booked successfully.");
-        schoolSlotUpdateStatus.setStatus(mp);
-        return schoolSlotUpdateStatus;
     }
 
     @Override
