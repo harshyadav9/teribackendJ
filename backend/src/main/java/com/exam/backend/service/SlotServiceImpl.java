@@ -1,10 +1,10 @@
 package com.exam.backend.service;
 
-import com.exam.backend.entity.*;
+import com.exam.backend.entity.SchoolSlotData;
+import com.exam.backend.entity.Slot;
 import com.exam.backend.pojo.IndividualStudentSlotDataDto;
 import com.exam.backend.pojo.SchoolSlotDataIncoming;
 import com.exam.backend.pojo.SchoolSlotUpdateStatus;
-import com.exam.backend.repository.IndividualStudentRepository;
 import com.exam.backend.repository.SlotRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,14 +25,12 @@ public class SlotServiceImpl implements SlotService {
     Logger log = LoggerFactory.getLogger(SlotServiceImpl.class);
     private final SlotRepository slotRepository;
     private final InternationalStudantsServiceImpl internationalStudantsService;
-    private final AllotedSlotServiceImpl allotedSlotService;
     private final IndividualStudentServiceImpl individualStudentService;
 
     @Autowired
-    public SlotServiceImpl(SlotRepository slotRepository, InternationalStudantsServiceImpl internationalStudantsService, AllotedSlotServiceImpl allotedSlotService, IndividualStudentServiceImpl individualStudentService) {
+    public SlotServiceImpl(SlotRepository slotRepository, InternationalStudantsServiceImpl internationalStudantsService, IndividualStudentServiceImpl individualStudentService) {
         this.slotRepository = slotRepository;
         this.internationalStudantsService = internationalStudantsService;
-        this.allotedSlotService = allotedSlotService;
         this.individualStudentService = individualStudentService;
     }
 
@@ -77,7 +75,6 @@ public class SlotServiceImpl implements SlotService {
             mp.put("Success", "Slot is booked successfully.");
             schoolSlotUpdateStatus.setStatus(mp);
             return schoolSlotUpdateStatus;
-
         }
     }
 
@@ -88,21 +85,12 @@ public class SlotServiceImpl implements SlotService {
         Map<String,String> mp = new HashMap<>();
 
         List<Slot> slots = new ArrayList<>();
-        List<AllotedSlot> allotedSlots = new ArrayList<>();
 
         for (IndividualStudentSlotDataDto individualStudentSlotDataDto : data){
             Slot slot = slotRepository.findBySlotId(individualStudentSlotDataDto.getSlotID());
             if (slot.getSeatAvailable() > 0){
                 slot.setSeatAvailable(slot.getSeatAvailable() - 1);
                 slots.add(slot);
-
-                AllotedSlot allotedSlot = new AllotedSlot();
-                AllotedSlotId id = new AllotedSlotId();
-                id.setSlotId(slot.getSlotId());
-                id.setAllotedSchoolId(individualStudentSlotDataDto.getRollNo());
-                allotedSlot.setId(id);
-                allotedSlots.add(allotedSlot);
-                log.info("alloted slots Inside updateSlotDataForIndvStudents(){}", allotedSlots);
             }
             else {
                 mp.put("Error", "Slot selected for examTheme " + slot.getExamTheme() + " is not having required available seats.");
@@ -123,17 +111,8 @@ public class SlotServiceImpl implements SlotService {
                 log.info("individualStudentstable is updated with slot timing for rollnumber and examtheme {} {}",
                         individualStudentSlotDataDto.getRollNo(), individualStudentSlotDataDto.getExamTheme());
             }
-            allotedSlotService.saveAll(allotedSlots);
-            log.info("allotedSlot table is updated successfully", allotedSlots);
-
         }
         log.info("schoolSlotUpdateStatus {}", schoolSlotUpdateStatus);
         return schoolSlotUpdateStatus;
     }
-
-   /* @Override
-    public List<IndividualStudentSlotData> getSlotsDataForIndvStudents(String rollNumber, String mode) {
-        return individualStudentRepository.getSlotDataForIndvStudents(rollNumber, mode);
-    }*/
-
 }
