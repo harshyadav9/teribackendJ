@@ -1,6 +1,5 @@
 package com.exam.backend.service;
 
-import com.exam.backend.entity.IndividualStudent;
 import com.exam.backend.entity.IndividualStudentSlotData;
 import com.exam.backend.pojo.IndividualStudentDto;
 
@@ -8,11 +7,11 @@ import java.util.List;
 
 public interface IndividualStudentService {
 
-    void saveStudent(IndividualStudentDto studentDto);
+    String saveStudent(IndividualStudentDto studentDto);
 
-    IndividualStudent getIndividualStudentDetail(String rollNumber);
+    IndividualStudentDto getIndividualStudentDetail(String rollNumber);
 
-    void updateIndividualStudentData(IndividualStudent individualStudent);
+    int updateIndividualStudentData(IndividualStudentDto individualStudentDto);
 
     List<IndividualStudentSlotData> getSlotsDataForIndvStudents(String rollNumber, String mode);
 

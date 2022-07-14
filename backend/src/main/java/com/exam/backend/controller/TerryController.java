@@ -98,33 +98,39 @@ public class TerryController {
     @PostMapping(value = "/registerStudent")
     public ResponseEntity<String> registerStudent(@RequestBody IndividualStudentDto individualStudentDto) {
         log.info("inside registerStudent() {}", individualStudentDto);
-        individualStudentService.saveStudent(individualStudentDto);
-        log.info("Exiting registerStudent() {}", individualStudentDto);
+        String rollNumber = individualStudentService.saveStudent(individualStudentDto);
+        log.info("Completed registerStudent() {}", rollNumber);
 
-        return ResponseEntity.status(HttpStatus.OK).body("Student is Registered Successfully.");
+        return ResponseEntity.status(HttpStatus.OK).body(rollNumber);
 
     }
 
     @GetMapping(value = "/viewIndividualStudentDetails")
-    public ResponseEntity<IndividualStudent> viewIndividualStudentDetails(@RequestParam String rollNumber) {
+    public ResponseEntity<IndividualStudentDto> viewIndividualStudentDetails(@RequestParam String rollNumber) {
         log.info("inside viewIndividualStudentDetails() {}", rollNumber);
-        IndividualStudent student = individualStudentService.getIndividualStudentDetail(rollNumber);
+        IndividualStudentDto individualStudentDto = individualStudentService.getIndividualStudentDetail(rollNumber);
 
-        log.info("Exiting viewIndividualStudentDetails() {}", student);
-        if (student != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(student);
+        log.info("Exiting viewIndividualStudentDetails() {}", individualStudentDto);
+        if (individualStudentDto != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(individualStudentDto);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new IndividualStudent());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new IndividualStudentDto());
         }
     }
 
     @PostMapping(value = "/updateIndividualStudentDetails")
-    public ResponseEntity<String> updateIndividualStudentDetails(@RequestBody IndividualStudent individualStudent) {
-        log.info("inside updateIndividualStudentDetails() {}", individualStudent);
-        individualStudentService.updateIndividualStudentData(individualStudent);
+    public ResponseEntity<String> updateIndividualStudentDetails(@RequestBody IndividualStudentDto individualStudentDto) {
+        log.info("inside updateIndividualStudentDetails() {}", individualStudentDto);
+        int count = individualStudentService.updateIndividualStudentData(individualStudentDto);
+        if (count == 1){
+            log.info("Student record is updated successfully for rollNumber {}", individualStudentDto.getRollNo());
+            return ResponseEntity.status(HttpStatus.OK).body("Individual Student Data updated successfully.");
 
-        log.info("Exiting updateIndividualStudentDetails()");
-        return ResponseEntity.status(HttpStatus.OK).body("Individual Student Data updated successfully");
+        }else {
+            log.info("Student record is updated successfully for rollNumber {}", individualStudentDto.getRollNo());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid Roll Number.");
+        }
+
     }
 
     @GetMapping(value = "/getPaymentDetailsForIndividualStudent")

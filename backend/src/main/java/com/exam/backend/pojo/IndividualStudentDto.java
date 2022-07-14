@@ -9,6 +9,8 @@ import lombok.ToString;
 @ToString
 public class IndividualStudentDto {
 
+    private String rollNo;
+
     private String password;
 
     private String name;

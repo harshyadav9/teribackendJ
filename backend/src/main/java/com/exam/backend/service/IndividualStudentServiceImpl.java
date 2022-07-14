@@ -2,7 +2,6 @@ package com.exam.backend.service;
 
 import com.exam.backend.entity.IndividualStudent;
 import com.exam.backend.entity.IndividualStudentSlotData;
-import com.exam.backend.entity.InternationalStudant;
 import com.exam.backend.pojo.IndividualStudentDto;
 import com.exam.backend.repository.IndividualStudentRepository;
 import org.slf4j.Logger;
@@ -28,7 +27,7 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
     }
 
     @Override
-    public void saveStudent(IndividualStudentDto studentDto) {
+    public String saveStudent(IndividualStudentDto studentDto) {
         log.info("Inside saveStudent() {}", studentDto);
         IndividualStudent individualStudent = new IndividualStudent();
         individualStudent.setDob(studentDto.getDob());
@@ -65,24 +64,53 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
             String rollNum = generateIndividualStudentRollNumber(studentDto.getRollNoPrefix(), decimalFormat.format(++last4digits1));
             individualStudent.setRollNo(rollNum);
         }
-        individualStudentRepository.save(individualStudent);
-        log.info("Completed saveStudent() {}", studentDto);
-
+        IndividualStudent individualStudent2 = individualStudentRepository.save(individualStudent);
+        log.info("Completed saveStudent() {}", individualStudent2);
+        return individualStudent2.getRollNo();
     }
 
     @Override
-    public IndividualStudent getIndividualStudentDetail(String rollNumber) {
+    public IndividualStudentDto getIndividualStudentDetail(String rollNumber) {
         log.info("getIndividualStudentDetail() {}", rollNumber);
         IndividualStudent individualStudent = individualStudentRepository.findByRollNo(rollNumber);
-        log.info("Completed getIndividualStudentDetail() {}", individualStudent);
-        return individualStudent;
+        IndividualStudentDto individualStudentDto = new IndividualStudentDto();
+        individualStudentDto.setAdd1(individualStudent.getAdd1());
+        individualStudentDto.setCity(individualStudent.getCity());
+        individualStudentDto.setCountry(individualStudent.getCountry());
+        individualStudentDto.setAdd2(individualStudent.getAdd2());
+        individualStudentDto.setDob(individualStudent.getDob());
+        individualStudentDto.setEmail(individualStudent.getEmail());
+        individualStudentDto.setDemoExam(individualStudent.getDemoExam());
+        individualStudentDto.setExamLevel(individualStudent.getExamLevel());
+        individualStudentDto.setName(individualStudent.getName());
+        individualStudentDto.setCountryCode(individualStudent.getCountry());
+        individualStudentDto.setSection(individualStudent.getSection());
+        individualStudentDto.setSchool(individualStudent.getSchool());
+        individualStudentDto.setStandard(individualStudent.getStandard());
+        individualStudentDto.setPin(individualStudent.getPin());
+        individualStudentDto.setPgMobile(individualStudent.getPgMobile());
+        individualStudentDto.setPgEmail(individualStudent.getPgEmail());
+        individualStudentDto.setModifiedby(individualStudent.getModifiedby());
+        individualStudentDto.setMobile(individualStudent.getMobile());
+        individualStudentDto.setGender(individualStudent.getGender());
+        individualStudentDto.setExamTheme(individualStudent.getExamTheme());
+        individualStudentDto.setCreatedBy(individualStudent.getCreatedby());
+
+
+        log.info("Completed getIndividualStudentDetail() {}", individualStudentDto);
+        return individualStudentDto;
     }
 
     @Override
-    public void updateIndividualStudentData(IndividualStudent individualStudent) {
-        log.info("updateIndividualStudentData() {}", individualStudent);
-        individualStudentRepository.save(individualStudent);
-        log.info("Completed updateIndividualStudentData() {}", individualStudent);
+    public int updateIndividualStudentData(IndividualStudentDto individualStudentDto) {
+        log.info("updateIndividualStudentData() {}", individualStudentDto);
+        int count = individualStudentRepository.updateIndividualStudentData(individualStudentDto.getRollNo(), individualStudentDto.getAdd1(), individualStudentDto.getCity(),
+                individualStudentDto.getPin(), individualStudentDto.getSchool(), individualStudentDto.getStandard(), individualStudentDto.getSection(),
+                individualStudentDto.getPgEmail(), individualStudentDto.getPgMobile(), individualStudentDto.getExamTheme(),
+                individualStudentDto.getDemoExam(), individualStudentDto.getExamLevel());
+        log.info("Completed updateIndividualStudentData() {}", individualStudentDto);
+        return count;
+
     }
 
     @Override
