@@ -1,6 +1,7 @@
 package com.exam.backend.repository;
 
 import com.exam.backend.entity.InternationalStudant;
+import com.exam.backend.entity.InternationalStudantsId;
 import com.exam.backend.entity.RollNumberData;
 import com.exam.backend.entity.SchoolSlotData;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface InternationalStudantsRepository extends CrudRepository<InternationalStudant, String> {
+public interface InternationalStudantsRepository extends CrudRepository<InternationalStudant, InternationalStudantsId> {
 
     @Query(nativeQuery = true, value = "SELECT * FROM vwGetExamSlotByTheme where schoolId = :schoolId and mode = :mode")
     List<SchoolSlotData> getData(String schoolId, String mode);

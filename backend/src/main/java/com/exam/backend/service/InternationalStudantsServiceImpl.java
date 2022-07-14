@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -40,7 +41,7 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
 
             InternationalStudant internationalStudant = new InternationalStudant();
             internationalStudant.setClassName(dto.getClassName());
-            internationalStudant.setDemoExam(dto.getDemoExam() != null && !dto.getDemoExam().isEmpty() && dto.getDemoExam().equalsIgnoreCase("YES")? "YES" : "NO");
+            internationalStudant.setDemoExam(dto.getDemoExam() != null && !dto.getDemoExam().isEmpty() && dto.getDemoExam().equalsIgnoreCase("YES") ? "YES" : "NO");
             internationalStudant.setExamTheme(dto.getExamTheme());
             InternationalStudantsId id = new InternationalStudantsId();
 
@@ -50,8 +51,26 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
             internationalStudant.setId(id);
             internationalStudant.setExamLevel(studentClass.getLevel());
             internationalStudant.setSection(dto.getSection());
+
+            InternationalStudantsId internationalStudantsId = new InternationalStudantsId();
+            internationalStudantsId.setDob(dto.getDob());
+            internationalStudantsId.setName(dto.getName());
+            internationalStudantsId.setSchoolId(dto.getSchoolId());
+
+            Optional<InternationalStudant> internationalStudant1 = internationalStudantsRepository.findById(internationalStudantsId);
+            if (internationalStudant1.isPresent()) {
+                if (internationalStudant1.get().getPaymentStatus()) {
+                    internationalStudant.setExamTheme(internationalStudant1.get().getExamTheme());
+                    internationalStudant.setPaymentStatus(internationalStudant1.get().getPaymentStatus());
+                } else {
+                    internationalStudant.setPaymentStatus(false);
+                }
+
+            } else {
+                internationalStudant.setPaymentStatus(false);
+            }
             internationalStudant.setPassword(dto.getDob());
-            internationalStudant.setPaymentStatus(false);
+
             UUID uuid = UUID.randomUUID();
             internationalStudant.setStudentId(String.valueOf(uuid));
             internationalStudantsRepository.save(internationalStudant);
@@ -72,32 +91,32 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
     public int updateExamSlotAndDemoSlotDateTime(String schoolId, String examTheme, String examSlotDateTime, String demoSlotDateTime) {
         log.info("Inside updateExamSlotAndDemoSlotDateTime() {} {} {} {}", schoolId, examTheme, examSlotDateTime, demoSlotDateTime);
         int counter = 0;
-        if (!examTheme.equalsIgnoreCase("MOCK")){
+        if (!examTheme.equalsIgnoreCase("MOCK")) {
 
             List<InternationalStudant> li = internationalStudantsRepository.findByIdSchoolIdAndExamTheme(schoolId, examTheme);
             for (InternationalStudant school : li) {
-                if (school.getExamSlotDatetime() == null){
+                if (school.getExamSlotDatetime() == null) {
                     school.setExamSlotDatetime(examSlotDateTime + "-" + demoSlotDateTime);
                     counter++;
                 }
 
             }
-            if (counter > 0){
+            if (counter > 0) {
                 internationalStudantsRepository.saveAll(li);
                 log.info("completed internationalStudantsRepository.saveAll(li) {}", li);
             }
         }
-        if (examTheme.equalsIgnoreCase("MOCK")){
+        if (examTheme.equalsIgnoreCase("MOCK")) {
             List<InternationalStudant> liMock = internationalStudantsRepository.findByIdSchoolIdAndDemoExam(schoolId, "YES");
             for (InternationalStudant school : liMock) {
 
-                if (school.getDemoSlotDatetime() == null && school.getDemoExam().equalsIgnoreCase("YES")){
+                if (school.getDemoSlotDatetime() == null && school.getDemoExam().equalsIgnoreCase("YES")) {
                     school.setDemoSlotDatetime(examSlotDateTime + "-" + demoSlotDateTime);
                     counter++;
 
                 }
             }
-            if (counter > 0){
+            if (counter > 0) {
                 internationalStudantsRepository.saveAll(liMock);
                 log.info("completed internationalStudantsRepository.saveAll(liMock) {}", liMock);
             }
@@ -121,18 +140,18 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
         log.info("checkIfSchoolHasRollNumber for schoolid {} {}", checkIfSchoolHasRollNumber, schoolId);
         RollNumberData rollNumberData = internationalStudantsRepository.getSchoolDataForGivenSchool(schoolId);
 
-        if (checkIfSchoolHasRollNumber > 0 ){
+        if (checkIfSchoolHasRollNumber > 0) {
             String rollNum = internationalStudantsRepository.findRollNumberForAlreadyPaidSchool(schoolId, true);
             final DecimalFormat decimalFormat = new DecimalFormat("0000");
             Integer last4Digits = generateRollNumber(rollNum);
-            for (InternationalStudant internationalStudant : studentsToBeUpdatedForASchool){
+            for (InternationalStudant internationalStudant : studentsToBeUpdatedForASchool) {
                 internationalStudant.setRollNo(createRollNumberPattern(decimalFormat.format(++last4Digits), rollNumberData));
             }
 
         } else {
             final DecimalFormat decimalFormat = new DecimalFormat("0000");
             Integer rollNumberVal = 0000;
-            for (InternationalStudant internationalStudant : studentsToBeUpdatedForASchool){
+            for (InternationalStudant internationalStudant : studentsToBeUpdatedForASchool) {
                 internationalStudant.setRollNo(createRollNumberPattern(decimalFormat.format(++rollNumberVal), rollNumberData));
             }
         }
@@ -142,16 +161,16 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
 
     }
 
-    private Integer generateRollNumber(String rollNum){
+    private Integer generateRollNumber(String rollNum) {
         log.info("generateRollNumber() for rollNumber {}", rollNum);
-        Integer last4digits = Integer.valueOf(rollNum.substring(rollNum.length()-5));
+        Integer last4digits = Integer.valueOf(rollNum.substring(rollNum.length() - 5));
         return last4digits;
 
     }
 
-    private String createRollNumberPattern(String last4digits, RollNumberData rollNumberData){
+    private String createRollNumberPattern(String last4digits, RollNumberData rollNumberData) {
 
-        String finalRollNumber = rollNumberData.getCountryCode()+rollNumberData.getYear()+rollNumberData.getStateCode()+rollNumberData.getSchoolNumber()+last4digits;
+        String finalRollNumber = rollNumberData.getCountryCode() + rollNumberData.getYear() + rollNumberData.getStateCode() + rollNumberData.getSchoolNumber() + last4digits;
         log.info("createRollNumberPattern() finalRollNumber{}", finalRollNumber);
         return finalRollNumber;
     }

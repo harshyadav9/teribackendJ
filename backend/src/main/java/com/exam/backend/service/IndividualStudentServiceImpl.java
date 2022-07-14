@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -29,6 +30,7 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
     @Override
     public String saveStudent(IndividualStudentDto studentDto) {
         log.info("Inside saveStudent() {}", studentDto);
+
         IndividualStudent individualStudent = new IndividualStudent();
         individualStudent.setDob(studentDto.getDob());
         individualStudent.setDemoExam(studentDto.getDemoExam());
@@ -104,6 +106,14 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
     @Override
     public int updateIndividualStudentData(IndividualStudentDto individualStudentDto) {
         log.info("updateIndividualStudentData() {}", individualStudentDto);
+
+        Optional<IndividualStudent> individualStudent = individualStudentRepository.findById(individualStudentDto.getRollNo());
+        if(individualStudent.isPresent()){
+            if (individualStudent.get().isPaymentStatus()){
+                log.info("ExamTheme cannot be changed since payment is already done for current theme {}", individualStudentDto);
+                individualStudentDto.setExamTheme(individualStudent.get().getExamTheme());
+            }
+        }
         int count = individualStudentRepository.updateIndividualStudentData(individualStudentDto.getRollNo(), individualStudentDto.getAdd1(), individualStudentDto.getCity(),
                 individualStudentDto.getPin(), individualStudentDto.getSchool(), individualStudentDto.getStandard(), individualStudentDto.getSection(),
                 individualStudentDto.getPgEmail(), individualStudentDto.getPgMobile(), individualStudentDto.getExamTheme(),

@@ -61,4 +61,6 @@ public class IndividualStudentDto {
 
     private String rollNoPrefix;
 
+    private String pgName;
+
 }

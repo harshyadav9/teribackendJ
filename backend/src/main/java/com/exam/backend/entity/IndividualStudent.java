@@ -94,4 +94,7 @@ public class IndividualStudent implements Serializable {
 
     @Column(name = "PaymentStatus")
     private boolean paymentStatus;
+
+    @Column(name = "PGName")
+    private String pgName;
 }

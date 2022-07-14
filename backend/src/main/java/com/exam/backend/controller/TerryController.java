@@ -78,9 +78,9 @@ public class TerryController {
     @PostMapping(value = "/generateRollNumber")
     public ResponseEntity<String> generateRollNumber(@RequestBody SchoolDto rollNumberDto) {
         log.info("inside generateRollNumber() {}", rollNumberDto);
-        internationalStudantsService.generateAndUpdateRollNumberForSchoolStudent(rollNumberDto.getSchoolId());
+        String message = internationalStudantsService.generateAndUpdateRollNumberForSchoolStudent(rollNumberDto.getSchoolId());
         log.info("Exiting generateRollNumber() {}", rollNumberDto);
-        return ResponseEntity.status(HttpStatus.OK).body("Roll Numbers are updated successfully.");
+        return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
     @PostMapping(value = "/changePassword")
@@ -100,9 +100,11 @@ public class TerryController {
         log.info("inside registerStudent() {}", individualStudentDto);
         String rollNumber = individualStudentService.saveStudent(individualStudentDto);
         log.info("Completed registerStudent() {}", rollNumber);
-
-        return ResponseEntity.status(HttpStatus.OK).body(rollNumber);
-
+        if (rollNumber != null){
+            return ResponseEntity.status(HttpStatus.OK).body(rollNumber);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to generate");
+        }
     }
 
     @GetMapping(value = "/viewIndividualStudentDetails")
@@ -137,7 +139,6 @@ public class TerryController {
     public ResponseEntity<IndividualStudentPaymentData> getPaymentDetailsForIndividualStudent(@RequestParam String rollNumber) {
         log.info("inside getPaymentDetailsForIndividualStudent() {}", rollNumber);
         IndividualStudentPaymentData individualStudentPaymentData = paymentDetailService.getPaymentDetailForIndiStudent(rollNumber);
-
         log.info("Exiting getPaymentDetailsForIndividualStudent()");
         return ResponseEntity.status(HttpStatus.OK).body(individualStudentPaymentData);
     }
