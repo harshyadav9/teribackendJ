@@ -21,11 +21,12 @@ public interface IndividualStudentRepository extends CrudRepository<IndividualSt
     List<IndividualStudentSlotData> getSlotDataForIndvStudents(String rollNumber, String mode);
 
     @Query(nativeQuery = true, value = "Update IndividualStudent set City =:city, Gender = :gender, Add1 = :add1, pin = :pin, School=:school, section=:section, " +
-            " standard=:standard, PGEmail=:pgEmail, PGMobile=:pgMobile, PGName = :pgName, ExamLevel = : examLevel, DemoExam =:demoExam, examTheme = :examTheme where RollNo = :rollNo")
+            " standard=:standard, PGEmail=:pgEmail, PGMobile=:pgMobile, PGName = :pgName, ExamLevel = :examLevel, DemoExam =:demoExam, examTheme = :examTheme where RollNo = :rollNo")
     @Modifying
     int updateIndividualStudentData(String rollNo, String city, String gender, String add1, String pin,
                                                                 String school, String section, String standard, String pgEmail,
                                                                 String pgMobile, String pgName, String examLevel, String demoExam, String examTheme);
 
     IndividualStudent findByRollNoAndDemoExam(String rollNo, String examTheme);
+
 }
