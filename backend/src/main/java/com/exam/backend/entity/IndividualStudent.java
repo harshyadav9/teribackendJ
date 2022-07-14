@@ -44,9 +44,6 @@ public class IndividualStudent implements Serializable {
     @Column(name = "Add1")
     private String add1;
 
-    @Column(name = "Add2")
-    private String add2;
-
     @Column(name = "State")
     private String state;
 

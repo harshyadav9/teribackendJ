@@ -43,11 +43,11 @@ public class TerryController {
         this.paymentDetailService = paymentDetailService;
     }
 
-    @PostMapping(value = "/uploadData")
-    public ResponseEntity<String> saveData(@RequestBody List<InternationalStudantsDto> data) {
-        log.info("inside saveData() {}", data);
+    @PostMapping(value = "/uploadSchoolData")
+    public ResponseEntity<String> uploadSchoolData(@RequestBody List<InternationalStudantsDto> data) {
+        log.info("inside uploadSchoolData() {}", data);
         saveDataToDb.saveData(data);
-        log.info("Exiting saveData() successfully.");
+        log.info("Exiting uploadSchoolData() successfully.");
         return ResponseEntity.status(HttpStatus.OK).body("Data is saved successfully");
     }
 
@@ -59,35 +59,35 @@ public class TerryController {
         return ResponseEntity.status(HttpStatus.OK).body(li);
     }
 
-    @PostMapping(value = "/updateSchoolAndSlotDetail")
-    public ResponseEntity<SchoolSlotUpdateStatus> updateSchoolAndSlotDetail(@RequestBody List<SchoolSlotDataIncoming> data) {
-        log.info("inside updateSchoolAndSlotDetail() {}", data);
+    @PostMapping(value = "/updateSchoolSlotDetail")
+    public ResponseEntity<SchoolSlotUpdateStatus> updateSchoolSlotDetail(@RequestBody List<SchoolSlotDataIncoming> data) {
+        log.info("inside updateSchoolSlotDetail() {}", data);
         SchoolSlotUpdateStatus schoolSlotUpdateStatus = slotService.updateSlotData(data);
-        log.info("Exiting updateSchoolAndSlotDetail() {}", schoolSlotUpdateStatus);
+        log.info("Exiting updateSchoolSlotDetail() {}", schoolSlotUpdateStatus);
         return ResponseEntity.status(HttpStatus.OK).body(schoolSlotUpdateStatus);
     }
 
-    @PostMapping(value = "/updatePaymentDetails")
-    public ResponseEntity<String> updatePaymentDetails(@RequestBody PaymentDetailDto paymentDetailDto) {
-        log.info("inside updatePaymentDetails() {}", paymentDetailDto);
+    @PostMapping(value = "/insertPaymentDetails")
+    public ResponseEntity<String> insertPaymentDetails(@RequestBody PaymentDetailDto paymentDetailDto) {
+        log.info("inside insertPaymentDetails() {}", paymentDetailDto);
         String string = updateSchool_studentPaymentService.updatePaymentData(paymentDetailDto);
-        log.info("Exiting updatePaymentDetails() {}", string);
+        log.info("Exiting insertPaymentDetails() {}", string);
         return ResponseEntity.status(HttpStatus.OK).body(string);
     }
 
-    @PostMapping(value = "/generateRollNumber")
-    public ResponseEntity<String> generateRollNumber(@RequestBody SchoolDto rollNumberDto) {
-        log.info("inside generateRollNumber() {}", rollNumberDto);
+    @PostMapping(value = "/generateSchoolRollNumber")
+    public ResponseEntity<String> generateSchoolRollNumber(@RequestBody SchoolDto rollNumberDto) {
+        log.info("inside generateSchoolRollNumber() {}", rollNumberDto);
         String message = internationalStudantsService.generateAndUpdateRollNumberForSchoolStudent(rollNumberDto.getSchoolId());
-        log.info("Exiting generateRollNumber() {}", rollNumberDto);
+        log.info("Exiting generateSchoolRollNumber() {}", rollNumberDto);
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
-    @PostMapping(value = "/changePassword")
-    public ResponseEntity<String> changePassword(@RequestBody SchoolDto rollNumberDto) {
-        log.info("inside changePassword() {}", rollNumberDto);
+    @PostMapping(value = "/changeSchoolPassword")
+    public ResponseEntity<String> changeSchoolPassword(@RequestBody SchoolDto rollNumberDto) {
+        log.info("inside changeSchoolPassword() {}", rollNumberDto);
         String resp = schoolService.updatePassword(rollNumberDto);
-        log.info("Exiting changePassword() {}", rollNumberDto);
+        log.info("Exiting changeSchoolPassword() {}", rollNumberDto);
         if (resp.equals("Invalid schoolId.Password Update failed.")) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resp);
         } else {

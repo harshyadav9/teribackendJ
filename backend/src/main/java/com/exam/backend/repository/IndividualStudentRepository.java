@@ -20,13 +20,12 @@ public interface IndividualStudentRepository extends CrudRepository<IndividualSt
     @Query(nativeQuery = true, value = "SELECT * FROM vwGetIndividualStudentSlotByTheme where RollNo = :rollNumber and mode = :mode")
     List<IndividualStudentSlotData> getSlotDataForIndvStudents(String rollNumber, String mode);
 
-    @Query(nativeQuery = true, value = "Update IndividualStudent set Add1=:add1, City =:city, Pin = :pin, School=:school,class=:standard, " +
-            " Section=:section, PGEmail=:pgEmail, PGMobile=:pgMobile, ExamTheme=:examTheme, DemoExam=:demoExam, ExamLevel= :examLevel where RollNo = :rollNo")
+    @Query(nativeQuery = true, value = "Update IndividualStudent set City =:city, Gender = :gender, Add1 = :add1, pin = :pin, School=:school, section=:section, " +
+            " standard=:standard, PGEmail=:pgEmail, PGMobile=:pgMobile, PGName = :pgName, ExamLevel = : examLevel, DemoExam =:demoExam, examTheme = :examTheme where RollNo = :rollNo")
     @Modifying
-    int updateIndividualStudentData(String rollNo, String add1, String city, String pin, String school,
-                                                                String standard, String section, String pgEmail, String pgMobile,
-                                                                String examTheme, String demoExam, String examLevel);
+    int updateIndividualStudentData(String rollNo, String city, String gender, String add1, String pin,
+                                                                String school, String section, String standard, String pgEmail,
+                                                                String pgMobile, String pgName, String examLevel, String demoExam, String examTheme);
 
     IndividualStudent findByRollNoAndDemoExam(String rollNo, String examTheme);
-
 }

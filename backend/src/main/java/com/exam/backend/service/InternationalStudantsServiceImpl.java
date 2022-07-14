@@ -62,6 +62,7 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
                 if (internationalStudant1.get().getPaymentStatus()) {
                     internationalStudant.setExamTheme(internationalStudant1.get().getExamTheme());
                     internationalStudant.setPaymentStatus(internationalStudant1.get().getPaymentStatus());
+                    internationalStudant.setDemoExam(internationalStudant1.get().getDemoExam());
                 } else {
                     internationalStudant.setPaymentStatus(false);
                 }

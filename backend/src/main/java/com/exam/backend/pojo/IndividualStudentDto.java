@@ -27,8 +27,6 @@ public class IndividualStudentDto {
 
     private String add1;
 
-    private String add2;
-
     private String state;
 
     private String city;

@@ -40,16 +40,13 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
         individualStudent.setPassword(studentDto.getPassword());
         individualStudent.setSection(studentDto.getSection());
         individualStudent.setAdd1(studentDto.getAdd1());
-        individualStudent.setAdd2(studentDto.getAdd2());
         individualStudent.setCity(studentDto.getCity());
         individualStudent.setCountry(studentDto.getCountry());
-        individualStudent.setCreatedby(studentDto.getCreatedBy());
         individualStudent.setEmail(studentDto.getEmail());
         individualStudent.setGender(studentDto.getGender());
         individualStudent.setState(studentDto.getState());
         individualStudent.setStandard(studentDto.getStandard());
         individualStudent.setMobile(studentDto.getMobile());
-        individualStudent.setModifiedby(studentDto.getModifiedby());
         individualStudent.setSchool(studentDto.getSchool());
         individualStudent.setPin(studentDto.getPin());
         individualStudent.setPgEmail(studentDto.getPgEmail());
@@ -61,10 +58,14 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
         if (last4digits != null) {
             String rollNum = generateIndividualStudentRollNumber(studentDto.getRollNoPrefix(), decimalFormat.format(++last4digits));
             individualStudent.setRollNo(rollNum);
+            individualStudent.setModifiedby(rollNum);
+            individualStudent.setCreatedby(rollNum);
         } else {
             Integer last4digits1 = 0000;
             String rollNum = generateIndividualStudentRollNumber(studentDto.getRollNoPrefix(), decimalFormat.format(++last4digits1));
             individualStudent.setRollNo(rollNum);
+            individualStudent.setModifiedby(rollNum);
+            individualStudent.setCreatedby(rollNum);
         }
         IndividualStudent individualStudent2 = individualStudentRepository.save(individualStudent);
         log.info("Completed saveStudent() {}", individualStudent2);
@@ -79,7 +80,6 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
         individualStudentDto.setAdd1(individualStudent.getAdd1());
         individualStudentDto.setCity(individualStudent.getCity());
         individualStudentDto.setCountry(individualStudent.getCountry());
-        individualStudentDto.setAdd2(individualStudent.getAdd2());
         individualStudentDto.setDob(individualStudent.getDob());
         individualStudentDto.setEmail(individualStudent.getEmail());
         individualStudentDto.setDemoExam(individualStudent.getDemoExam());
@@ -112,12 +112,13 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
             if (individualStudent.get().isPaymentStatus()){
                 log.info("ExamTheme cannot be changed since payment is already done for current theme {}", individualStudentDto);
                 individualStudentDto.setExamTheme(individualStudent.get().getExamTheme());
+                individualStudentDto.setDemoExam(individualStudent.get().getDemoExam());
             }
         }
-        int count = individualStudentRepository.updateIndividualStudentData(individualStudentDto.getRollNo(), individualStudentDto.getAdd1(), individualStudentDto.getCity(),
-                individualStudentDto.getPin(), individualStudentDto.getSchool(), individualStudentDto.getStandard(), individualStudentDto.getSection(),
-                individualStudentDto.getPgEmail(), individualStudentDto.getPgMobile(), individualStudentDto.getExamTheme(),
-                individualStudentDto.getDemoExam(), individualStudentDto.getExamLevel());
+        int count = individualStudentRepository.updateIndividualStudentData(individualStudentDto.getRollNo(), individualStudentDto.getCity(), individualStudentDto.getGender(),
+                individualStudentDto.getAdd1(), individualStudentDto.getPin(), individualStudentDto.getSchool(), individualStudentDto.getSection(),
+                individualStudentDto.getStandard(), individualStudentDto.getPgEmail(), individualStudentDto.getPgMobile(), individualStudentDto.getPgName(),
+                individualStudentDto.getExamLevel(), individualStudentDto.getDemoExam(), individualStudentDto.getExamTheme());
         log.info("Completed updateIndividualStudentData() {}", individualStudentDto);
         return count;
 
