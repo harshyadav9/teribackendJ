@@ -14,4 +14,6 @@ public interface IndividualStudentPaymentData {
 
     Double getTotalFees();
 
+    Integer getPaymentStatus();
+
 }
