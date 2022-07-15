@@ -68,7 +68,6 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
                 } else {
                     internationalStudant.setPaymentStatus(false);
                 }
-
             } else {
                 internationalStudant.setPaymentStatus(false);
             }

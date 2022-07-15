@@ -2,6 +2,7 @@ package com.exam.backend.service;
 
 import com.exam.backend.entity.IndividualStudent;
 import com.exam.backend.entity.IndividualStudentSlotData;
+import com.exam.backend.entity.RollNumberData;
 import com.exam.backend.pojo.IndividualStudentDto;
 import com.exam.backend.repository.IndividualStudentRepository;
 import org.slf4j.Logger;
@@ -53,7 +54,11 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
         individualStudent.setPgMobile(studentDto.getPgMobile());
 
         //generate RollNumber
-        Integer last4digits = individualStudentRepository.findLastRunningRollNumber();
+//        IndividualStudent individualStudentDB = individualStudentRepository.findByCountryAndStateOrderbyModifiedOnDescLimit1(studentDto.getCountry(), studentDto.getState());
+//        if (individualStudentDB != null){
+//            Integer last4digitsofRunningRollNo = Integer.valueOf(individualStudentDB.getRollNo().substring(individualStudentDB.getRollNo().length() - 5));
+//        }
+        Integer last4digits = individualStudentRepository.findLastRunningRollNumber(studentDto.getCountry(), studentDto.getState());
         final DecimalFormat decimalFormat = new DecimalFormat("0000");
         if (last4digits != null) {
             String rollNum = generateIndividualStudentRollNumber(studentDto.getRollNoPrefix(), decimalFormat.format(++last4digits));
