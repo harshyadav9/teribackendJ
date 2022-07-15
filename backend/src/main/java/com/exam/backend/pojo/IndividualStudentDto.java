@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.Column;
+
 @Getter
 @Setter
 @ToString
@@ -62,5 +64,9 @@ public class IndividualStudentDto {
     private String pgName;
 
     private boolean paymentStatus;
+
+    private String examSlotDateTime;
+
+    private String demoSlotDateTime;
 
 }

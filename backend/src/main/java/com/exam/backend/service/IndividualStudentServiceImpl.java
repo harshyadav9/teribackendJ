@@ -103,6 +103,8 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
             individualStudentDto.setRollNo(individualStudent.get().getRollNo());
             individualStudentDto.setState(individualStudent.get().getState());
             individualStudentDto.setPgName(individualStudent.get().getPgName());
+            individualStudentDto.setExamSlotDateTime(individualStudent.get().getExamSlotDateTime());
+            individualStudentDto.setDemoSlotDateTime(individualStudent.get().getDemoSlotDateTime());
 
             log.info("Completed getIndividualStudentDetail() {}", individualStudentDto);
             return individualStudentDto;
