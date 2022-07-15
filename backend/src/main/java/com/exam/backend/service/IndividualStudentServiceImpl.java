@@ -75,32 +75,40 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
     @Override
     public IndividualStudentDto getIndividualStudentDetail(String rollNumber) {
         log.info("getIndividualStudentDetail() {}", rollNumber);
-        IndividualStudent individualStudent = individualStudentRepository.findByRollNo(rollNumber);
-        IndividualStudentDto individualStudentDto = new IndividualStudentDto();
-        individualStudentDto.setAdd1(individualStudent.getAdd1());
-        individualStudentDto.setCity(individualStudent.getCity());
-        individualStudentDto.setCountry(individualStudent.getCountry());
-        individualStudentDto.setDob(individualStudent.getDob());
-        individualStudentDto.setEmail(individualStudent.getEmail());
-        individualStudentDto.setDemoExam(individualStudent.getDemoExam());
-        individualStudentDto.setExamLevel(individualStudent.getExamLevel());
-        individualStudentDto.setName(individualStudent.getName());
-        individualStudentDto.setCountryCode(individualStudent.getCountry());
-        individualStudentDto.setSection(individualStudent.getSection());
-        individualStudentDto.setSchool(individualStudent.getSchool());
-        individualStudentDto.setStandard(individualStudent.getStandard());
-        individualStudentDto.setPin(individualStudent.getPin());
-        individualStudentDto.setPgMobile(individualStudent.getPgMobile());
-        individualStudentDto.setPgEmail(individualStudent.getPgEmail());
-        individualStudentDto.setModifiedby(individualStudent.getModifiedby());
-        individualStudentDto.setMobile(individualStudent.getMobile());
-        individualStudentDto.setGender(individualStudent.getGender());
-        individualStudentDto.setExamTheme(individualStudent.getExamTheme());
-        individualStudentDto.setCreatedBy(individualStudent.getCreatedby());
+        Optional<IndividualStudent> individualStudent = individualStudentRepository.findById(rollNumber);
+        if (individualStudent.isPresent()){
 
+            IndividualStudentDto individualStudentDto = new IndividualStudentDto();
+            individualStudentDto.setAdd1(individualStudent.get().getAdd1());
+            individualStudentDto.setCity(individualStudent.get().getCity());
+            individualStudentDto.setCountry(individualStudent.get().getCountry());
+            individualStudentDto.setDob(individualStudent.get().getDob());
+            individualStudentDto.setEmail(individualStudent.get().getEmail());
+            individualStudentDto.setDemoExam(individualStudent.get().getDemoExam());
+            individualStudentDto.setExamLevel(individualStudent.get().getExamLevel());
+            individualStudentDto.setName(individualStudent.get().getName());
+            individualStudentDto.setCountryCode(individualStudent.get().getCountry());
+            individualStudentDto.setSection(individualStudent.get().getSection());
+            individualStudentDto.setSchool(individualStudent.get().getSchool());
+            individualStudentDto.setStandard(individualStudent.get().getStandard());
+            individualStudentDto.setPin(individualStudent.get().getPin());
+            individualStudentDto.setPgMobile(individualStudent.get().getPgMobile());
+            individualStudentDto.setPgEmail(individualStudent.get().getPgEmail());
+            individualStudentDto.setModifiedby(individualStudent.get().getModifiedby());
+            individualStudentDto.setMobile(individualStudent.get().getMobile());
+            individualStudentDto.setGender(individualStudent.get().getGender());
+            individualStudentDto.setExamTheme(individualStudent.get().getExamTheme());
+            individualStudentDto.setCreatedBy(individualStudent.get().getCreatedby());
+            individualStudentDto.setPaymentStatus(individualStudent.get().isPaymentStatus());
+            individualStudentDto.setRollNo(individualStudent.get().getRollNo());
+            individualStudentDto.setState(individualStudent.get().getState());
+            individualStudentDto.setPgName(individualStudent.get().getPgName());
 
-        log.info("Completed getIndividualStudentDetail() {}", individualStudentDto);
-        return individualStudentDto;
+            log.info("Completed getIndividualStudentDetail() {}", individualStudentDto);
+            return individualStudentDto;
+        }else {
+            return null;
+        }
     }
 
     @Override
@@ -139,11 +147,12 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
     public void updateExamSlotAndDemoSlotDateTimeForIndvStudent(String rollNumber, String examTheme, String examSlotDateTime, String demoSlotDateTime) {
         log.info("Inside updateExamSlotAndDemoSlotDateTimeForIndvStudent() {} {} {} {}", rollNumber, examTheme, examSlotDateTime, demoSlotDateTime);
         if (!examTheme.equalsIgnoreCase("MOCK")){
-            IndividualStudent individualStudent = individualStudentRepository.findByRollNo(rollNumber);
-            individualStudent.setExamSlotDateTime(examSlotDateTime + "-" + demoSlotDateTime);
-
-            individualStudentRepository.save(individualStudent);
-            log.info("completed updateExamSlotAndDemoSlotDateTimeForIndvStudent.save(individualStudent) {}", individualStudent);
+            Optional<IndividualStudent> individualStudent = individualStudentRepository.findById(rollNumber);
+            if (individualStudent.isPresent()){
+                individualStudent.get().setExamSlotDateTime(examSlotDateTime + "-" + demoSlotDateTime);
+                individualStudentRepository.save(individualStudent.get());
+                log.info("completed updateExamSlotAndDemoSlotDateTimeForIndvStudent.save(individualStudent) {}", individualStudent);
+            }
         }
         if (examTheme.equalsIgnoreCase("MOCK")){
             IndividualStudent individualStudent = individualStudentRepository.findByRollNoAndDemoExam(rollNumber, "YES");
@@ -152,5 +161,4 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
             log.info("completed updateExamSlotAndDemoSlotDateTimeForIndvStudent.save(individualStudent) {}", individualStudent);
         }
     }
-
 }

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 public class ClassServiceImpl implements ClassService{
@@ -24,8 +26,15 @@ public class ClassServiceImpl implements ClassService{
     @Override
     public StudentClass getClassLevel(String className) {
         log.info("Inside getClassLevel() {}", className);
-        StudentClass studentClass = classRepository.findByClassName(className);
-        log.info("studentClass in getClassLevel() {}", studentClass);
-        return studentClass;
+        Optional<StudentClass> studentClass = classRepository.findById(className);
+        if (studentClass.isPresent()){
+            log.info("studentClass in getClassLevel() {}", studentClass);
+            return studentClass.get();
+
+        }
+        else {
+            return null;
+        }
+
     }
 }

@@ -49,7 +49,9 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
             id.setName(dto.getName());
             id.setSchoolId(dto.getSchoolId());
             internationalStudant.setId(id);
-            internationalStudant.setExamLevel(studentClass.getLevel());
+            if (studentClass != null){
+                internationalStudant.setExamLevel(studentClass.getLevel());
+            }
             internationalStudant.setSection(dto.getSection());
 
             InternationalStudantsId internationalStudantsId = new InternationalStudantsId();

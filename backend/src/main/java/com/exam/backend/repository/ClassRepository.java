@@ -8,5 +8,4 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface ClassRepository extends CrudRepository<StudentClass, String> {
 
-    StudentClass findByClassName(String name);
 }

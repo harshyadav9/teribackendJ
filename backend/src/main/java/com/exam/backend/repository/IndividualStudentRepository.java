@@ -15,8 +15,6 @@ public interface IndividualStudentRepository extends CrudRepository<IndividualSt
     @Query(nativeQuery = true, value = "SELECT max(RIGHT(RollNo, 4)) from IndividualStudent")
     Integer findLastRunningRollNumber();
 
-    IndividualStudent findByRollNo(String rollNumber);
-
     @Query(nativeQuery = true, value = "SELECT * FROM vwGetIndividualStudentSlotByTheme where RollNo = :rollNumber and mode = :mode")
     List<IndividualStudentSlotData> getSlotDataForIndvStudents(String rollNumber, String mode);
 

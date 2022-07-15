@@ -1,6 +1,5 @@
 package com.exam.backend.controller;
 
-import com.exam.backend.entity.IndividualStudent;
 import com.exam.backend.entity.IndividualStudentPaymentData;
 import com.exam.backend.entity.IndividualStudentSlotData;
 import com.exam.backend.entity.SchoolSlotData;
