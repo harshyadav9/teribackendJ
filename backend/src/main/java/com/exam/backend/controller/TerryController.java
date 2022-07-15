@@ -126,12 +126,10 @@ public class TerryController {
         if (count == 1){
             log.info("Student record is updated successfully for rollNumber {}", individualStudentDto.getRollNo());
             return ResponseEntity.status(HttpStatus.OK).body("Individual Student Data updated successfully.");
-
         }else {
-            log.info("Student record is updated successfully for rollNumber {}", individualStudentDto.getRollNo());
+            log.info("Student record is not updated successfully for rollNumber {}", individualStudentDto.getRollNo());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid Roll Number.");
         }
-
     }
 
     @GetMapping(value = "/getPaymentDetailsForIndividualStudent")
