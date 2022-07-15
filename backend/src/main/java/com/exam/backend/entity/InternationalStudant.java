@@ -58,4 +58,11 @@ public class InternationalStudant implements Serializable {
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateTimeStamp;
+
+    @Column(name = "Createdby")
+    private String createdby;
+
+    @Column(name = "Modby")
+    private String modby;
+
 }
