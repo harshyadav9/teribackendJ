@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -28,10 +29,12 @@ public class TerryController {
     private final SchoolServiceImpl schoolService;
     private final IndividualStudentServiceImpl individualStudentService;
     private final PaymentDetailServiceImpl paymentDetailService;
+    private final DownloadExcelTemplateHelper downloadExcelTemplateHelper;
 
     @Autowired
     public TerryController(SaveDataToDb saveDataToDb, SlotServiceImpl slotService, UpdateSchool_StudentPaymentService updateSchool_studentPaymentService,
-                           InternationalStudantsServiceImpl internationalStudantsService, SchoolServiceImpl schoolService, IndividualStudentServiceImpl individualStudentService, PaymentDetailServiceImpl paymentDetailService) {
+                           InternationalStudantsServiceImpl internationalStudantsService, SchoolServiceImpl schoolService, IndividualStudentServiceImpl individualStudentService, PaymentDetailServiceImpl paymentDetailService,
+                           DownloadExcelTemplateHelper downloadExcelTemplateHelper) {
 
         this.saveDataToDb = saveDataToDb;
         this.slotService = slotService;
@@ -40,6 +43,7 @@ public class TerryController {
         this.schoolService = schoolService;
         this.individualStudentService = individualStudentService;
         this.paymentDetailService = paymentDetailService;
+        this.downloadExcelTemplateHelper = downloadExcelTemplateHelper;
     }
 
     @PostMapping(value = "/uploadSchoolData")
@@ -48,6 +52,11 @@ public class TerryController {
         saveDataToDb.saveData(data);
         log.info("Exiting uploadSchoolData() successfully.");
         return ResponseEntity.status(HttpStatus.OK).body("Data is saved successfully");
+    }
+
+    @GetMapping(value = "/downloadExcelTemplate")
+    public ResponseEntity downloadExcelTemplate(HttpServletResponse response) {
+        return ResponseEntity.status(HttpStatus.OK).body(downloadExcelTemplateHelper.downloadTemplate(response));
     }
 
     @GetMapping(value = "/getSlotsData")

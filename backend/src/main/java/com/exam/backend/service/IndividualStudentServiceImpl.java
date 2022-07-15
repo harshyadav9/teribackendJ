@@ -2,7 +2,6 @@ package com.exam.backend.service;
 
 import com.exam.backend.entity.IndividualStudent;
 import com.exam.backend.entity.IndividualStudentSlotData;
-import com.exam.backend.entity.RollNumberData;
 import com.exam.backend.pojo.IndividualStudentDto;
 import com.exam.backend.repository.IndividualStudentRepository;
 import org.slf4j.Logger;
