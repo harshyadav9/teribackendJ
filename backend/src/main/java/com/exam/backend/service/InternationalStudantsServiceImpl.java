@@ -61,7 +61,8 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
 
             Optional<InternationalStudant> internationalStudant1 = internationalStudantsRepository.findById(internationalStudantsId);
             if (internationalStudant1.isPresent()) {
-                if (internationalStudant1.get().getPaymentStatus()) {
+                if (internationalStudant1.get().getPaymentStatus() || internationalStudant1.get().getExamSlotDatetime() != null ||
+                        internationalStudant1.get().getDemoSlotDatetime() != null) {
                     internationalStudant.setExamTheme(internationalStudant1.get().getExamTheme());
                     internationalStudant.setPaymentStatus(internationalStudant1.get().getPaymentStatus());
                     internationalStudant.setDemoExam(internationalStudant1.get().getDemoExam());
