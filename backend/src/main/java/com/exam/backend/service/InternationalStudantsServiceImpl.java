@@ -66,6 +66,8 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
                     internationalStudant.setExamTheme(internationalStudant1.get().getExamTheme());
                     internationalStudant.setPaymentStatus(internationalStudant1.get().getPaymentStatus());
                     internationalStudant.setDemoExam(internationalStudant1.get().getDemoExam());
+                    internationalStudant.setExamSlotDatetime(internationalStudant1.get().getExamSlotDatetime() != null ? internationalStudant1.get().getExamSlotDatetime() : null);
+                    internationalStudant.setDemoSlotDatetime(internationalStudant1.get().getDemoSlotDatetime() != null ? internationalStudant1.get().getDemoSlotDatetime() : null);
                 } else {
                     internationalStudant.setPaymentStatus(false);
                 }
