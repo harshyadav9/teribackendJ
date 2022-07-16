@@ -152,7 +152,7 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
     @Override
     public void updateExamSlotAndDemoSlotDateTimeForIndvStudent(String rollNumber, String examTheme, String examSlotDateTime, String demoSlotDateTime) {
         log.info("Inside updateExamSlotAndDemoSlotDateTimeForIndvStudent() {} {} {} {}", rollNumber, examTheme, examSlotDateTime, demoSlotDateTime);
-        if (!examTheme.equalsIgnoreCase("MOCK")){
+        if (!examTheme.contains("MOCK")){
             Optional<IndividualStudent> individualStudent = individualStudentRepository.findById(rollNumber);
             if (individualStudent.isPresent()){
                 individualStudent.get().setExamSlotDateTime(examSlotDateTime + "-" + demoSlotDateTime);
@@ -160,7 +160,7 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
                 log.info("completed updateExamSlotAndDemoSlotDateTimeForIndvStudent.save(individualStudent) {}", individualStudent);
             }
         }
-        if (examTheme.equalsIgnoreCase("MOCK")){
+        if (examTheme.contains("MOCK")){
             IndividualStudent individualStudent = individualStudentRepository.findByRollNoAndDemoExam(rollNumber, "YES");
             individualStudent.setDemoSlotDateTime(examSlotDateTime + "-" + demoSlotDateTime);
             individualStudentRepository.save(individualStudent);

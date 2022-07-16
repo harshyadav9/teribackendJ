@@ -95,7 +95,7 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
     public int updateExamSlotAndDemoSlotDateTime(String schoolId, String examTheme, String examSlotDateTime, String demoSlotDateTime) {
         log.info("Inside updateExamSlotAndDemoSlotDateTime() {} {} {} {}", schoolId, examTheme, examSlotDateTime, demoSlotDateTime);
         int counter = 0;
-        if (!examTheme.equalsIgnoreCase("MOCK")) {
+        if (!examTheme.contains("MOCK")) {
 
             List<InternationalStudant> li = internationalStudantsRepository.findByIdSchoolIdAndExamTheme(schoolId, examTheme);
             for (InternationalStudant school : li) {
@@ -110,7 +110,7 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
                 log.info("completed internationalStudantsRepository.saveAll(li) {}", li);
             }
         }
-        if (examTheme.equalsIgnoreCase("MOCK")) {
+        if (examTheme.contains("MOCK")) {
             List<InternationalStudant> liMock = internationalStudantsRepository.findByIdSchoolIdAndDemoExam(schoolId, "YES");
             for (InternationalStudant school : liMock) {
 
