@@ -49,7 +49,7 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
             id.setName(dto.getName());
             id.setSchoolId(dto.getSchoolId());
             internationalStudant.setId(id);
-            if (studentClass != null){
+            if (studentClass != null) {
                 internationalStudant.setExamLevel(studentClass.getLevel());
             }
             internationalStudant.setSection(dto.getSection());
@@ -77,7 +77,13 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
             internationalStudant.setPassword(dto.getDob());
 
             UUID uuid = UUID.randomUUID();
-            internationalStudant.setStudentId(internationalStudant1.get().getStudentId() != null ? internationalStudant1.get().getStudentId() : String.valueOf(uuid));
+            if (internationalStudant1.isPresent()) {
+                internationalStudant.setStudentId(internationalStudant1.get().getStudentId() != null ? internationalStudant1.get().getStudentId() : String.valueOf(uuid));
+
+            } else {
+                internationalStudant.setStudentId(String.valueOf(uuid));
+
+            }
             internationalStudant.setModby(dto.getSchoolId());
             internationalStudant.setCreatedby(dto.getSchoolId());
             internationalStudantsRepository.save(internationalStudant);
@@ -135,6 +141,7 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
     @Override
     public String generateAndUpdateRollNumberForSchoolStudent(String schoolId) {
         log.info("Inside generateAndUpdateRollNumberForSchoolStudent() {}", schoolId);
+
         List<InternationalStudant> studentsToBeUpdatedForASchool = internationalStudantsRepository.findAllByIdSchoolIdAndPaymentStatusAndRollNoNull(schoolId, true);
 
         if (studentsToBeUpdatedForASchool.size() == 0) {
