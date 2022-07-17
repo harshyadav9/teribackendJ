@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -53,8 +54,19 @@ public class HelpdeskTicketServiceImpl implements HelpdeskTicketService {
     }
 
     @Override
-    public Integer updateHelpdeskTicket(HelpdeskTicketDto helpdeskTicketDto) {
-        return null;
+    public String updateHelpdeskTicket(HelpdeskTicketDto helpdeskTicketDto) {
+
+       Optional<HelpdeskTicket> helpdeskTicket = helpdeskTicketRepository.findById(helpdeskTicketDto.getTicketID());
+       if (helpdeskTicket.isPresent()){
+           helpdeskTicket.get().setStatusID(helpdeskTicketDto.getStatusID());
+           helpdeskTicket.get().setModifiedBy(helpdeskTicketDto.getModifiedBy());
+           helpdeskTicketRepository.save(helpdeskTicket.get());
+
+           createHelpdeskDetailData(helpdeskTicketDto, helpdeskTicketDto.getTicketID());
+           return "Ticket Details are successfully updated.";
+       } else {
+           return "Invalid Ticket Id.";
+       }
     }
 
     @Override

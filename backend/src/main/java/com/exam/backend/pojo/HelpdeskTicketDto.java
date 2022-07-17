@@ -9,6 +9,8 @@ import lombok.ToString;
 @ToString
 public class HelpdeskTicketDto {
 
+    private Integer ticketID;
+
     private Integer categoryID;
 
     private Integer statusID;

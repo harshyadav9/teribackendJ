@@ -8,8 +8,7 @@ import java.util.List;
 public interface HelpdeskTicketService {
 
     Integer createHelpdeskTicket(HelpdeskTicketDto helpdeskTicketDto);
-    Integer updateHelpdeskTicket(HelpdeskTicketDto helpdeskTicketDto);
-
+    String updateHelpdeskTicket(HelpdeskTicketDto helpdeskTicketDto);
     List<TicketDetail> getHelpdeskTicketDetails(String school_roll_id);
 
 }

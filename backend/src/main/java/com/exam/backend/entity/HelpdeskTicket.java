@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table(name = "HelpdeskTicket")
@@ -41,5 +43,10 @@ public class HelpdeskTicket implements Serializable {
 
     @Column(name = "ModifiedBy")
     private String modifiedBy;
+
+    @UpdateTimestamp
+    //@Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "ModifiedOn")
+    private Date ModifiedOn;
 
 }

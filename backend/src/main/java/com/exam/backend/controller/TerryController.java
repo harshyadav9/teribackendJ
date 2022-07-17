@@ -182,11 +182,22 @@ public class TerryController {
         log.info("Inside getHelpdeskTicketDetails() {}", school_roll_id);
         List<TicketDetail> ticketDetails = helpdeskTicketService.getHelpdeskTicketDetails(school_roll_id);
         log.info("Exiting getHelpdeskTicketDetails() {}", school_roll_id);
-        if (ticketDetails != null && ticketDetails.size() > 0){
+        if (ticketDetails != null && ticketDetails.size() > 0) {
             return ResponseEntity.status(HttpStatus.OK).body(ticketDetails);
-        }
-        else {
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ArrayList<>());
+        }
+    }
+
+    @PostMapping(value = "/updateHelpdeskTicketDetails")
+    public ResponseEntity<String> updateHelpdeskTicketDetails(@RequestBody HelpdeskTicketDto helpdeskTicketDto) {
+        log.info("Inside updateHelpdeskTicketDetails() {}", helpdeskTicketDto);
+        String msg = helpdeskTicketService.updateHelpdeskTicket(helpdeskTicketDto);
+        log.info("Exiting updateHelpdeskTicketDetails() {}", helpdeskTicketDto);
+        if (msg != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(msg);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(msg);
         }
 
     }
