@@ -77,7 +77,7 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
             internationalStudant.setPassword(dto.getDob());
 
             UUID uuid = UUID.randomUUID();
-            internationalStudant.setStudentId(String.valueOf(uuid));
+            internationalStudant.setStudentId(internationalStudant1.get().getStudentId() != null ? internationalStudant1.get().getStudentId() : String.valueOf(uuid));
             internationalStudant.setModby(dto.getSchoolId());
             internationalStudant.setCreatedby(dto.getSchoolId());
             internationalStudantsRepository.save(internationalStudant);
