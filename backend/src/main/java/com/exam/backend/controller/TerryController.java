@@ -6,6 +6,7 @@ import com.exam.backend.entity.SchoolSlotData;
 import com.exam.backend.entity.TicketDetail;
 import com.exam.backend.pojo.*;
 import com.exam.backend.service.*;
+import org.apache.poi.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,9 +61,14 @@ public class TerryController {
         return ResponseEntity.status(HttpStatus.OK).body("Data is saved successfully");
     }
 
-    @GetMapping(value = "/downloadExcelTemplate")
-    public ResponseEntity downloadExcelTemplate(HttpServletResponse response) {
-        return ResponseEntity.status(HttpStatus.OK).body(downloadExcelTemplateHelper.downloadTemplate(response));
+    @GetMapping(value = "/downloadExcelTemplate/test.xlsx")
+    public void downloadExcelTemplate(HttpServletResponse response) throws IOException {
+
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment; filename=test.xlsx");
+        ByteArrayInputStream stream = downloadExcelTemplateHelper.downloadTemplate();
+        IOUtils.copy(stream, response.getOutputStream());
+
     }
 
     @GetMapping(value = "/getSlotsData")

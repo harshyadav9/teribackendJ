@@ -11,7 +11,7 @@
     </parent>
     <groupId>com.exam</groupId>
     <artifactId>backend</artifactId>
-    <version>0.0.30-SNAPSHOT</version>
+    <version>0.0.31-SNAPSHOT</version>
     <name>backend</name>
     <description>Demo project for Spring Boot</description>
     <properties>
@@ -27,11 +27,18 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
-        <dependency>
+       <!-- <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
             <version>4.1.1</version>
+        </dependency>-->
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>4.1.0</version>
         </dependency>
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
