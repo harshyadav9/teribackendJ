@@ -16,4 +16,8 @@ public interface IndividualStudentPaymentData {
 
     Integer getPaymentStatus();
 
+    String getExamSlotDateTime();
+
+    String getDemoSlotDateTime();
+
 }
