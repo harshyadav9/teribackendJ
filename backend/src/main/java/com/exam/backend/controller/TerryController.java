@@ -61,11 +61,11 @@ public class TerryController {
         return ResponseEntity.status(HttpStatus.OK).body("Data is saved successfully");
     }
 
-    @GetMapping(value = "/downloadExcelTemplate/test.xlsx")
+    @GetMapping(value = "/downloadExcelTemplate")
     public void downloadExcelTemplate(HttpServletResponse response) throws IOException {
 
         response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment; filename=test.xlsx");
+        response.setHeader("Content-Disposition", "attachment; filename=StudentUploadTemplate.xlsx");
         ByteArrayInputStream stream = downloadExcelTemplateHelper.downloadTemplate();
         IOUtils.copy(stream, response.getOutputStream());
 

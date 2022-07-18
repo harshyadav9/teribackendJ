@@ -69,4 +69,6 @@ public class IndividualStudentDto {
 
     private String demoSlotDateTime;
 
+    private String indigo;
+
 }

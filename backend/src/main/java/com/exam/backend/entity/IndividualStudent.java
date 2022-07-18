@@ -94,4 +94,7 @@ public class IndividualStudent implements Serializable {
 
     @Column(name = "PGName")
     private String pgName;
+
+    @Column(name = "IndiGO")
+    private String indiGO;
 }
