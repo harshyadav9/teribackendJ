@@ -28,5 +28,4 @@ public class SaveDataToDb {
         internationalStudantsService.saveStudentsData(data);
         log.info("Completed saveData() {}", data);
     }
-
 }

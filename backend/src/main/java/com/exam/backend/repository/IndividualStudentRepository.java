@@ -12,8 +12,8 @@ import java.util.List;
 @Repository
 public interface IndividualStudentRepository extends CrudRepository<IndividualStudent, String> {
 
-    @Query(nativeQuery = true, value = "SELECT max(RIGHT(RollNo, 4)) from IndividualStudent where country = :country and state = :state")
-    Integer findLastRunningRollNumber(String country, String state);
+    @Query(nativeQuery = true, value = "SELECT max(RIGHT(RollNo, 4)) from IndividualStudent where rollNo in (select rollno from shooolnyt.IndividualStudent where rollno like :rollNoPrefix%)")
+    Integer findLastRunningRollNumber(String rollNoPrefix);
 
     @Query(nativeQuery = true, value = "SELECT * FROM vwGetIndividualStudentSlotByTheme where RollNo = :rollNumber and mode = :mode")
     List<IndividualStudentSlotData> getSlotDataForIndvStudents(String rollNumber, String mode);

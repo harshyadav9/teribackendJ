@@ -2,6 +2,7 @@ package com.exam.backend.service;
 
 import com.exam.backend.entity.*;
 import com.exam.backend.pojo.InternationalStudantsDto;
+import com.exam.backend.repository.InternationalStudantsHistoryRepository;
 import com.exam.backend.repository.InternationalStudantsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DecimalFormat;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,11 +24,13 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
 
     private final ClassServiceImpl classService;
     private final InternationalStudantsRepository internationalStudantsRepository;
+    private final InternationalStudantsHistoryRepository internationalStudantsHistoryRepository;
 
     @Autowired
-    public InternationalStudantsServiceImpl(ClassServiceImpl classService, InternationalStudantsRepository internationalStudantsRepository) {
+    public InternationalStudantsServiceImpl(ClassServiceImpl classService, InternationalStudantsRepository internationalStudantsRepository, InternationalStudantsHistoryRepository internationalStudantsHistoryRepository) {
         this.classService = classService;
         this.internationalStudantsRepository = internationalStudantsRepository;
+        this.internationalStudantsHistoryRepository = internationalStudantsHistoryRepository;
     }
 
     @Override
@@ -86,10 +90,31 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
             }
             internationalStudant.setModby(dto.getSchoolId());
             internationalStudant.setCreatedby(dto.getSchoolId());
+
+            insertDataIntoHistoryTableForTracking(dto);
+            log.info("Data is saved to Studants history table.");
+
             internationalStudantsRepository.save(internationalStudant);
             log.info("internationalStudants data() is saved {}", internationalStudant);
+
         }
         log.info("Completed saveStudentsData() {}", data);
+    }
+
+    private void insertDataIntoHistoryTableForTracking(InternationalStudantsDto data) {
+        log.info("Entered insertDataIntoHistoryTableForTracking() {}", data);
+        InternationalStudantsHistory internationalStudantsHistory = new InternationalStudantsHistory();
+        internationalStudantsHistory.setDob(data.getDob());
+        internationalStudantsHistory.setDemoExam(data.getDemoExam());
+        internationalStudantsHistory.setName(data.getName());
+        internationalStudantsHistory.setPassword(data.getDob());
+        internationalStudantsHistory.setSection(data.getSection());
+        internationalStudantsHistory.setExamTheme(data.getExamTheme());
+        internationalStudantsHistory.setSchoolID(data.getSchoolId());
+
+        internationalStudantsHistoryRepository.save(internationalStudantsHistory);
+        log.info("Exiting insertDataIntoHistoryTableForTracking() {}", data);
+
     }
 
     @Override

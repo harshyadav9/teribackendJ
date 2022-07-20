@@ -58,9 +58,10 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
 //        if (individualStudentDB != null){
 //            Integer last4digitsofRunningRollNo = Integer.valueOf(individualStudentDB.getRollNo().substring(individualStudentDB.getRollNo().length() - 5));
 //        }
-        Integer last4digits = individualStudentRepository.findLastRunningRollNumber(studentDto.getCountry(), studentDto.getState());
+        Integer last4digits = individualStudentRepository.findLastRunningRollNumber(studentDto.getRollNoPrefix());
+       // individualStudentRepository.findLastRunningRollNumber(studentDto.getCountry(), studentDto.getState());
         final DecimalFormat decimalFormat = new DecimalFormat("0000");
-        if (last4digits != null) {
+        if(last4digits != null){
             String rollNum = generateIndividualStudentRollNumber(studentDto.getRollNoPrefix(), decimalFormat.format(++last4digits));
             individualStudent.setRollNo(rollNum);
             individualStudent.setModifiedby(rollNum);
@@ -72,6 +73,19 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
             individualStudent.setModifiedby(rollNum);
             individualStudent.setCreatedby(rollNum);
         }
+
+       /* if (last4digits != null) {
+            *//*String rollNum = generateIndividualStudentRollNumber(studentDto.getRollNoPrefix(), decimalFormat.format(++last4digits));
+            individualStudent.setRollNo(rollNum);
+            individualStudent.setModifiedby(rollNum);
+            individualStudent.setCreatedby(rollNum);*//*
+        } else {
+            Integer last4digits1 = 0000;
+            String rollNum = generateIndividualStudentRollNumber(studentDto.getRollNoPrefix(), decimalFormat.format(++last4digits1));
+            individualStudent.setRollNo(rollNum);
+            individualStudent.setModifiedby(rollNum);
+            individualStudent.setCreatedby(rollNum);
+        }*/
         IndividualStudent individualStudent2 = individualStudentRepository.save(individualStudent);
         log.info("Completed saveStudent() {}", individualStudent2);
         return individualStudent2.getRollNo();
