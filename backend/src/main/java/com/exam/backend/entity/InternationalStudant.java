@@ -18,8 +18,19 @@ import java.util.Date;
 @ToString
 public class InternationalStudant implements Serializable {
 
-    @EmbeddedId
-    private InternationalStudantsId id;
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name = "StudentID")
+    private Integer studentId;
+
+    @Column(name = "DOB")
+    private String dob;
+
+    @Column(name = "Name")
+    private String name;
+
+    @Column(name = "SchoolID")
+    private String schoolId;
 
     @Column(name = "Class")
     private String className;
@@ -40,16 +51,13 @@ public class InternationalStudant implements Serializable {
     private String password;
 
     @Column(name = "paymentStatus")
-    private Boolean paymentStatus;
+    private boolean paymentStatus;
 
     @Column(name = "DemoSlotDateTime")
     private String demoSlotDatetime;
 
     @Column(name = "ExamSlotDateTime")
     private String examSlotDatetime;
-
-    @Column(name = "StudentID")
-    private String studentId;
 
     @Column(name = "Rollno")
     private String rollNo;

@@ -1,7 +1,6 @@
 package com.exam.backend.repository;
 
 import com.exam.backend.entity.InternationalStudant;
-import com.exam.backend.entity.InternationalStudantsId;
 import com.exam.backend.entity.RollNumberData;
 import com.exam.backend.entity.SchoolSlotData;
 import org.springframework.data.jpa.repository.Query;
@@ -11,18 +10,18 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface InternationalStudantsRepository extends CrudRepository<InternationalStudant, InternationalStudantsId> {
+public interface InternationalStudantsRepository extends CrudRepository<InternationalStudant, Integer> {
 
     @Query(nativeQuery = true, value = "SELECT * FROM vwGetExamSlotByTheme where schoolId = :schoolId and mode = :mode")
     List<SchoolSlotData> getData(String schoolId, String mode);
 
-    List<InternationalStudant> findByIdSchoolIdAndExamTheme(String schoolId, String examTheme);
+    List<InternationalStudant> findBySchoolIdAndExamTheme(String schoolId, String examTheme);
 
-    List<InternationalStudant> findByIdSchoolIdAndDemoExam(String schoolId, String examTheme);
+    List<InternationalStudant> findBySchoolIdAndDemoExam(String schoolId, String examTheme);
 
-    List<InternationalStudant> findAllByIdSchoolIdAndPaymentStatusAndRollNoNull(String schoolId, Boolean paymentStatus);
+    List<InternationalStudant> findAllBySchoolIdAndPaymentStatusAndRollNoNull(String schoolId, Boolean paymentStatus);
 
-    long countByIdSchoolIdAndPaymentStatusAndRollNoNotNull(String schoolId, Boolean paymentStatus);
+    long countBySchoolIdAndPaymentStatusAndRollNoNotNull(String schoolId, Boolean paymentStatus);
 
     @Query(nativeQuery = true, value = "select l.rollno from (\n" +
             "SELECT *,   \n" +

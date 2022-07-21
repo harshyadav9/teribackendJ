@@ -21,6 +21,9 @@ public class InternationalStudantsDto {
 
     private String demoExam;
 
-    private String schoolId; //schoolid
+    private String schoolId;
 
+    private Integer studentId;
+
+    private boolean paymentStatus;
 }

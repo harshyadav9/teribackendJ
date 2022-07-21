@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DecimalFormat;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -40,65 +39,50 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
 
         for (InternationalStudantsDto dto : data) {
             log.info("dto{}", dto);
-            StudentClass studentClass = classService.getClassLevel(dto.getClassName());
-            log.info("studentClass data() {} {}", studentClass, data);
 
-            InternationalStudant internationalStudant = new InternationalStudant();
-            internationalStudant.setClassName(dto.getClassName());
-            internationalStudant.setDemoExam(dto.getDemoExam() != null && !dto.getDemoExam().isEmpty() && dto.getDemoExam().equalsIgnoreCase("YES") ? "YES" : "NO");
-            internationalStudant.setExamTheme(dto.getExamTheme());
-            InternationalStudantsId id = new InternationalStudantsId();
+            if (dto.getStudentId()!= null){
 
-            id.setDob(dto.getDob());
-            id.setName(dto.getName());
-            id.setSchoolId(dto.getSchoolId());
-            internationalStudant.setId(id);
-            if (studentClass != null) {
-                internationalStudant.setExamLevel(studentClass.getLevel());
-            }
-            internationalStudant.setSection(dto.getSection());
-
-            InternationalStudantsId internationalStudantsId = new InternationalStudantsId();
-            internationalStudantsId.setDob(dto.getDob());
-            internationalStudantsId.setName(dto.getName());
-            internationalStudantsId.setSchoolId(dto.getSchoolId());
-
-            Optional<InternationalStudant> internationalStudant1 = internationalStudantsRepository.findById(internationalStudantsId);
-            if (internationalStudant1.isPresent()) {
-                if (internationalStudant1.get().getPaymentStatus() || internationalStudant1.get().getExamSlotDatetime() != null ||
-                        internationalStudant1.get().getDemoSlotDatetime() != null) {
-                    internationalStudant.setExamTheme(internationalStudant1.get().getExamTheme());
-                    internationalStudant.setPaymentStatus(internationalStudant1.get().getPaymentStatus());
-                    internationalStudant.setDemoExam(internationalStudant1.get().getDemoExam());
-                    internationalStudant.setExamSlotDatetime(internationalStudant1.get().getExamSlotDatetime() != null ? internationalStudant1.get().getExamSlotDatetime() : null);
-                    internationalStudant.setDemoSlotDatetime(internationalStudant1.get().getDemoSlotDatetime() != null ? internationalStudant1.get().getDemoSlotDatetime() : null);
-                } else {
-                    internationalStudant.setPaymentStatus(false);
+                //update the details for this studentid in table
+                Optional<InternationalStudant> internationalStudant = internationalStudantsRepository.findById(dto.getStudentId());
+                if (internationalStudant.isPresent()){
+                    internationalStudant = Optional.ofNullable(setData(dto, internationalStudant.get()));
+                    internationalStudantsRepository.save(internationalStudant.get());
                 }
-            } else {
-                internationalStudant.setPaymentStatus(false);
-            }
-            internationalStudant.setPassword(dto.getDob());
-
-            UUID uuid = UUID.randomUUID();
-            if (internationalStudant1.isPresent()) {
-                internationalStudant.setStudentId(internationalStudant1.get().getStudentId() != null ? internationalStudant1.get().getStudentId() : String.valueOf(uuid));
 
             } else {
-                internationalStudant.setStudentId(String.valueOf(uuid));
-
+                //create new record
+                InternationalStudant internationalStudant = new InternationalStudant();
+                internationalStudant = setData(dto, internationalStudant);
+                internationalStudantsRepository.save(internationalStudant);
             }
-            internationalStudant.setModby(dto.getSchoolId());
-            internationalStudant.setCreatedby(dto.getSchoolId());
-
             insertDataIntoHistoryTableForTracking(dto);
             log.info("Data is saved to Studants history table.");
 
-            internationalStudantsRepository.save(internationalStudant);
-            log.info("internationalStudants data() is saved {}", internationalStudant);
-
         }
         log.info("Completed saveStudentsData() {}", data);
+    }
+
+    private InternationalStudant setData(InternationalStudantsDto internationalStudantDto, InternationalStudant internationalStudant){
+        StudentClass studentClass = classService.getClassLevel(internationalStudantDto.getClassName());
+
+        internationalStudant.setClassName(internationalStudantDto.getClassName());
+        internationalStudant.setDemoExam(internationalStudantDto.getDemoExam() != null && !internationalStudantDto.getDemoExam().isEmpty() && internationalStudantDto.getDemoExam().equalsIgnoreCase("YES") ? "YES" : "NO");
+        internationalStudant.setExamTheme(internationalStudant.isPaymentStatus() || internationalStudant.getExamSlotDatetime() != null || internationalStudant.getDemoSlotDatetime() != null ?
+                internationalStudant.getExamTheme() : internationalStudantDto.getExamTheme());
+        //internationalStudant.setPaymentStatus(internationalStudant.isPaymentStatus() ? internationalStudant.isPaymentStatus() : internationalStudantDto.isPaymentStatus());
+        if (studentClass != null) {
+            internationalStudant.setExamLevel(studentClass.getLevel());
+        }
+        internationalStudant.setSection(internationalStudantDto.getSection());
+        internationalStudant.setPassword(internationalStudantDto.getDob());
+        internationalStudant.setModby(internationalStudantDto.getSchoolId());
+        internationalStudant.setCreatedby(internationalStudantDto.getSchoolId());
+        internationalStudant.setDob(internationalStudantDto.getDob());
+        internationalStudant.setName(internationalStudantDto.getName());
+        internationalStudant.setSchoolId(internationalStudantDto.getSchoolId());
+
+        return internationalStudant;
+
     }
 
     private void insertDataIntoHistoryTableForTracking(InternationalStudantsDto data) {
@@ -111,6 +95,7 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
         internationalStudantsHistory.setSection(data.getSection());
         internationalStudantsHistory.setExamTheme(data.getExamTheme());
         internationalStudantsHistory.setSchoolID(data.getSchoolId());
+        internationalStudantsHistory.setClassName(data.getClassName());
 
         internationalStudantsHistoryRepository.save(internationalStudantsHistory);
         log.info("Exiting insertDataIntoHistoryTableForTracking() {}", data);
@@ -131,7 +116,7 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
         int counter = 0;
         if (!examTheme.contains("MOCK")) {
 
-            List<InternationalStudant> li = internationalStudantsRepository.findByIdSchoolIdAndExamTheme(schoolId, examTheme);
+            List<InternationalStudant> li = internationalStudantsRepository.findBySchoolIdAndExamTheme(schoolId, examTheme);
             for (InternationalStudant school : li) {
                 if (school.getExamSlotDatetime() == null) {
                     school.setExamSlotDatetime(examSlotDateTime + "-" + demoSlotDateTime);
@@ -145,7 +130,7 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
             }
         }
         if (examTheme.contains("MOCK")) {
-            List<InternationalStudant> liMock = internationalStudantsRepository.findByIdSchoolIdAndDemoExam(schoolId, "YES");
+            List<InternationalStudant> liMock = internationalStudantsRepository.findBySchoolIdAndDemoExam(schoolId, "YES");
             for (InternationalStudant school : liMock) {
 
                 if (school.getDemoSlotDatetime() == null && school.getDemoExam().equalsIgnoreCase("YES")) {
@@ -167,7 +152,7 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
     public String generateAndUpdateRollNumberForSchoolStudent(String schoolId) {
         log.info("Inside generateAndUpdateRollNumberForSchoolStudent() {}", schoolId);
 
-        List<InternationalStudant> studentsToBeUpdatedForASchool = internationalStudantsRepository.findAllByIdSchoolIdAndPaymentStatusAndRollNoNull(schoolId, true);
+        List<InternationalStudant> studentsToBeUpdatedForASchool = internationalStudantsRepository.findAllBySchoolIdAndPaymentStatusAndRollNoNull(schoolId, true);
 
         if (studentsToBeUpdatedForASchool.size() == 0) {
             log.info("Nothing to update for schoolId {}", schoolId);
@@ -175,7 +160,7 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
 
         }
 
-        long checkIfSchoolHasRollNumber = internationalStudantsRepository.countByIdSchoolIdAndPaymentStatusAndRollNoNotNull(schoolId, true);
+        long checkIfSchoolHasRollNumber = internationalStudantsRepository.countBySchoolIdAndPaymentStatusAndRollNoNotNull(schoolId, true);
         log.info("checkIfSchoolHasRollNumber for schoolid {} {}", checkIfSchoolHasRollNumber, schoolId);
         RollNumberData rollNumberData = internationalStudantsRepository.getSchoolDataForGivenSchool(schoolId);
 
