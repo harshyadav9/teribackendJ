@@ -7,9 +7,11 @@ import com.exam.backend.repository.InternationalStudantsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +35,7 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
     }
 
     @Override
-    public void saveStudentsData(List<InternationalStudantsDto> data) {
+    public String saveStudentsData(List<InternationalStudantsDto> data) {
 
         log.info("Inside saveStudentsData() {}", data);
 
@@ -60,9 +62,11 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
 
         }
         log.info("Completed saveStudentsData() {}", data);
+        return "Data Saved Successfully.";
     }
 
-    private InternationalStudant setData(InternationalStudantsDto internationalStudantDto, InternationalStudant internationalStudant){
+    private InternationalStudant setData(InternationalStudantsDto internationalStudantDto, InternationalStudant internationalStudant) {
+
         StudentClass studentClass = classService.getClassLevel(internationalStudantDto.getClassName());
 
         internationalStudant.setClassName(internationalStudantDto.getClassName());

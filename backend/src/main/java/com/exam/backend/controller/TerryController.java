@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,11 +37,12 @@ public class TerryController {
     private final PaymentDetailServiceImpl paymentDetailService;
     private final DownloadExcelTemplateHelper downloadExcelTemplateHelper;
     private final HelpdeskTicketServiceImpl helpdeskTicketService;
+    private final ChangePasswordService changePasswordService;
 
     @Autowired
     public TerryController(SaveDataToDb saveDataToDb, SlotServiceImpl slotService, UpdateSchool_StudentPaymentService updateSchool_studentPaymentService,
                            InternationalStudantsServiceImpl internationalStudantsService, SchoolServiceImpl schoolService, IndividualStudentServiceImpl individualStudentService, PaymentDetailServiceImpl paymentDetailService,
-                           DownloadExcelTemplateHelper downloadExcelTemplateHelper, HelpdeskTicketServiceImpl helpdeskTicketService) {
+                           DownloadExcelTemplateHelper downloadExcelTemplateHelper, HelpdeskTicketServiceImpl helpdeskTicketService, ChangePasswordService changePasswordService) {
 
         this.saveDataToDb = saveDataToDb;
         this.slotService = slotService;
@@ -51,14 +53,15 @@ public class TerryController {
         this.paymentDetailService = paymentDetailService;
         this.downloadExcelTemplateHelper = downloadExcelTemplateHelper;
         this.helpdeskTicketService = helpdeskTicketService;
+        this.changePasswordService = changePasswordService;
     }
 
     @PostMapping(value = "/uploadSchoolData")
-    public ResponseEntity<String> uploadSchoolData(@RequestBody List<InternationalStudantsDto> data) {
+    public ResponseEntity<String> uploadSchoolData(@RequestBody List<InternationalStudantsDto> data) throws SQLIntegrityConstraintViolationException {
         log.info("inside uploadSchoolData() {}", data);
-        saveDataToDb.saveData(data);
-        log.info("Exiting uploadSchoolData() successfully.");
-        return ResponseEntity.status(HttpStatus.OK).body("Data is saved successfully");
+        String msg = saveDataToDb.saveData(data);
+        log.info(msg);
+        return ResponseEntity.status(HttpStatus.OK).body(msg);
     }
 
     @GetMapping(value = "/downloadExcelTemplate")
@@ -96,15 +99,27 @@ public class TerryController {
     }
 
     @PostMapping(value = "/generateSchoolRollNumber")
-    public ResponseEntity<String> generateSchoolRollNumber(@RequestBody SchoolDto rollNumberDto) {
+    public ResponseEntity<String> generateSchoolRollNumber(@RequestBody ChangePasswordDto rollNumberDto) {
         log.info("Inside generateSchoolRollNumber() {}", rollNumberDto);
         String message = internationalStudantsService.generateAndUpdateRollNumberForSchoolStudent(rollNumberDto.getSchoolId());
         log.info("Exiting generateSchoolRollNumber() {}", rollNumberDto);
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
-    @PostMapping(value = "/changeSchoolPassword")
-    public ResponseEntity<String> changeSchoolPassword(@RequestBody SchoolDto rollNumberDto) {
+    @PostMapping(value = "/changePassword")
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDto changePasswordDto) {
+        log.info("Inside changePassword() {}", changePasswordDto);
+        String msg = changePasswordService.changePassword(changePasswordDto);
+        log.info("Exiting changePassword() {}", changePasswordDto);
+        if (msg.equals("No data found for given input.")) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(msg);
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(msg);
+        }
+    }
+
+   /* @PostMapping(value = "/forgotPassword")
+    public ResponseEntity<String> forgotPassword(@RequestBody ChangePasswordDto rollNumberDto) {
         log.info("Inside changeSchoolPassword() {}", rollNumberDto);
         String resp = schoolService.updatePassword(rollNumberDto);
         log.info("Exiting changeSchoolPassword() {}", rollNumberDto);
@@ -113,7 +128,7 @@ public class TerryController {
         } else {
             return ResponseEntity.status(HttpStatus.OK).body("Password is Updated Successfully.");
         }
-    }
+    }*/
 
     @PostMapping(value = "/registerStudent")
     public ResponseEntity<String> registerStudent(@RequestBody IndividualStudentDto individualStudentDto) {

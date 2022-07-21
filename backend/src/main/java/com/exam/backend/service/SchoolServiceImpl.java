@@ -1,8 +1,7 @@
 package com.exam.backend.service;
 
 import com.exam.backend.entity.School;
-import com.exam.backend.pojo.InternationalStudantsDto;
-import com.exam.backend.pojo.SchoolDto;
+import com.exam.backend.pojo.ChangePasswordDto;
 import com.exam.backend.repository.SchoolRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -27,7 +24,7 @@ public class SchoolServiceImpl implements SchoolService{
     }
 
     @Override
-    public String updatePassword(SchoolDto rollNumberDto) {
+    public String updatePassword(ChangePasswordDto rollNumberDto) {
         log.info("Inside updatePassword() {}", rollNumberDto);
 
         School school = new School();
@@ -44,4 +41,5 @@ public class SchoolServiceImpl implements SchoolService{
        }
 
     }
+
 }

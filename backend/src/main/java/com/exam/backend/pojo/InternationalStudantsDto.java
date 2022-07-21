@@ -25,5 +25,7 @@ public class InternationalStudantsDto {
 
     private Integer studentId;
 
-    private boolean paymentStatus;
+    private String DemoSlotDateTime;
+
+    private String ExamSlotDateTime;
 }

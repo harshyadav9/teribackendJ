@@ -1,8 +1,9 @@
 package com.exam.backend.service;
 
-import com.exam.backend.pojo.SchoolDto;
+import com.exam.backend.pojo.ChangePasswordDto;
 
 public interface SchoolService {
 
-    String updatePassword(SchoolDto rollNumberDto);
+    String updatePassword(ChangePasswordDto rollNumberDto);
+
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @Service
@@ -23,9 +24,9 @@ public class SaveDataToDb {
         this.internationalStudantsService = internationalStudantsService;
     }
 
-    public void saveData(List<InternationalStudantsDto> data){
+    public String saveData(List<InternationalStudantsDto> data) throws SQLIntegrityConstraintViolationException {
         log.info("Inside saveData() {}", data);
-        internationalStudantsService.saveStudentsData(data);
-        log.info("Completed saveData() {}", data);
+        return internationalStudantsService.saveStudentsData(data);
+
     }
 }

@@ -9,10 +9,16 @@ import lombok.ToString;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SchoolDto {
+public class ChangePasswordDto {
 
     private String schoolId;
 
+    private String indvRollNumber;
+
     private String newPassword;
+
+    private String isIndividualStudent;
+
+    private boolean isIndividualStudent1;
 
 }
