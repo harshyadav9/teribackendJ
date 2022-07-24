@@ -10,6 +10,7 @@ import org.apache.poi.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +41,9 @@ public class TerryController {
     private final ChangePasswordService changePasswordService;
 
     @Autowired
+    private Environment env;
+
+    @Autowired
     public TerryController(SaveDataToDb saveDataToDb, SlotServiceImpl slotService, UpdateSchool_StudentPaymentService updateSchool_studentPaymentService,
                            InternationalStudantsServiceImpl internationalStudantsService, SchoolServiceImpl schoolService, IndividualStudentServiceImpl individualStudentService, PaymentDetailServiceImpl paymentDetailService,
                            DownloadExcelTemplateHelper downloadExcelTemplateHelper, HelpdeskTicketServiceImpl helpdeskTicketService, ChangePasswordService changePasswordService) {
@@ -54,6 +58,11 @@ public class TerryController {
         this.downloadExcelTemplateHelper = downloadExcelTemplateHelper;
         this.helpdeskTicketService = helpdeskTicketService;
         this.changePasswordService = changePasswordService;
+    }
+
+    @GetMapping(value = "/testLoadedEnv")
+    public ResponseEntity<String> testLoadedEnv() {
+        return ResponseEntity.status(HttpStatus.OK).body(env.getProperty("db.env"));
     }
 
     @PostMapping(value = "/uploadSchoolData")
