@@ -75,6 +75,12 @@ public class HelpdeskTicketServiceImpl implements HelpdeskTicketService {
         return tickets;
     }
 
+    @Override
+    public List<TicketDetail> getHelpdeskTicketDetailsForAdmin() {
+        List<TicketDetail> tickets = helpdeskTicketDetailRepository.getTicketDataForAdmin();
+        return tickets;
+    }
+
     private void createHelpdeskDetailData(HelpdeskTicketDto helpdeskTicketDto, Integer ticketId){
         HelpdeskTicketDetail helpdeskTicketDetail = new HelpdeskTicketDetail();
         helpdeskTicketDetail.setTicketID(ticketId);

@@ -10,5 +10,6 @@ public interface HelpdeskTicketService {
     Integer createHelpdeskTicket(HelpdeskTicketDto helpdeskTicketDto);
     String updateHelpdeskTicket(HelpdeskTicketDto helpdeskTicketDto);
     List<TicketDetail> getHelpdeskTicketDetails(String school_roll_id);
+    List<TicketDetail> getHelpdeskTicketDetailsForAdmin();
 
 }

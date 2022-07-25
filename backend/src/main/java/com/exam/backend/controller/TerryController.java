@@ -127,18 +127,6 @@ public class TerryController {
         }
     }
 
-   /* @PostMapping(value = "/forgotPassword")
-    public ResponseEntity<String> forgotPassword(@RequestBody ChangePasswordDto rollNumberDto) {
-        log.info("Inside changeSchoolPassword() {}", rollNumberDto);
-        String resp = schoolService.updatePassword(rollNumberDto);
-        log.info("Exiting changeSchoolPassword() {}", rollNumberDto);
-        if (resp.equals("Invalid schoolId.Password Update failed.")) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resp);
-        } else {
-            return ResponseEntity.status(HttpStatus.OK).body("Password is Updated Successfully.");
-        }
-    }*/
-
     @PostMapping(value = "/registerStudent")
     public ResponseEntity<String> registerStudent(@RequestBody IndividualStudentDto individualStudentDto) {
         log.info("Inside registerStudent() {}", individualStudentDto);
@@ -221,6 +209,18 @@ public class TerryController {
         }
     }
 
+    @GetMapping(value = "/getHelpdeskTicketDetailsForAdmin")
+    public ResponseEntity<List<TicketDetail>> getHelpdeskTicketDetailsForAdmin() {
+        log.info("Inside getHelpdeskTicketDetailsForAdmin()");
+        List<TicketDetail> ticketDetails = helpdeskTicketService.getHelpdeskTicketDetailsForAdmin();
+        log.info("Exiting getHelpdeskTicketDetails()");
+        if (ticketDetails != null && ticketDetails.size() > 0) {
+            return ResponseEntity.status(HttpStatus.OK).body(ticketDetails);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ArrayList<>());
+        }
+    }
+
     @PostMapping(value = "/updateHelpdeskTicketDetails")
     public ResponseEntity<String> updateHelpdeskTicketDetails(@RequestBody HelpdeskTicketDto helpdeskTicketDto) {
         log.info("Inside updateHelpdeskTicketDetails() {}", helpdeskTicketDto);
@@ -232,4 +232,5 @@ public class TerryController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(msg);
         }
     }
+
 }

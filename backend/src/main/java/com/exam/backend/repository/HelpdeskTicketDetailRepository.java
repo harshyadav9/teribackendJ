@@ -15,4 +15,7 @@ public interface HelpdeskTicketDetailRepository extends CrudRepository<HelpdeskT
     @Query(nativeQuery = true, value = "SELECT * FROM vwGetHelpdeskTicketDetail where schoolID_RollNo = :school_roll_id")
     List<TicketDetail> getTicketData(String school_roll_id);
 
+    @Query(nativeQuery = true, value = "SELECT * FROM vwGetHelpdeskTicketDetail")
+    List<TicketDetail> getTicketDataForAdmin();
+
 }

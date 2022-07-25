@@ -1,6 +1,7 @@
 package com.exam.backend.pojo;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -9,6 +10,7 @@ import java.sql.Date;
 @ToString
 @Getter
 @Setter
+@NoArgsConstructor
 public class SchoolSlotDataIncoming {
 
     private Integer slotId;
