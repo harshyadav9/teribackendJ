@@ -102,8 +102,16 @@ public class TerryController {
     @PostMapping(value = "/insertPaymentDetails")
     public ResponseEntity<String> insertPaymentDetails(@RequestBody PaymentDetailDto paymentDetailDto) {
         log.info("Inside insertPaymentDetails() {}", paymentDetailDto);
-        String string = updateSchool_studentPaymentService.updatePaymentData(paymentDetailDto);
+        String string = updateSchool_studentPaymentService.insertPaymentData(paymentDetailDto);
         log.info("Exiting insertPaymentDetails() {}", string);
+        return ResponseEntity.status(HttpStatus.OK).body(string);
+    }
+
+    @PostMapping(value = "/updatePaymentDetails")
+    public ResponseEntity<String> updatePaymentDetails(@RequestBody List<PaymentDetailDto> paymentDetailDtoList) {
+        log.info("Inside updatePaymentDetails() {}", paymentDetailDtoList);
+        String string = updateSchool_studentPaymentService.updatePaymentData(paymentDetailDtoList);
+        log.info("Exiting updatePaymentDetails() {}", string);
         return ResponseEntity.status(HttpStatus.OK).body(string);
     }
 

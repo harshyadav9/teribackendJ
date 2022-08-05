@@ -3,6 +3,7 @@ package com.exam.backend.repository;
 import com.exam.backend.entity.InternationalStudant;
 import com.exam.backend.entity.RollNumberData;
 import com.exam.backend.entity.SchoolSlotData;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -44,5 +45,9 @@ public interface InternationalStudantsRepository extends CrudRepository<Internat
             "ON inst.statename = sch.State\n" +
             "WHERE sch.SchoolsCode = :schoolId")
     RollNumberData getSchoolDataForGivenSchool(String schoolId);
+
+    @Query(nativeQuery = true, value = "Update InternationalStudants set paymentStatus = 1, Modby = 'Admin' where SchoolID = :schoolCode")
+    @Modifying
+    int updatePaymentFlagForSchool(String schoolCode);
 
 }

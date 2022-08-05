@@ -17,4 +17,6 @@ public interface IndividualStudentService {
 
     void updateExamSlotAndDemoSlotDateTimeForIndvStudent(String rollNumber, String examTheme, String examSlotDateTime, String demoSlotDateTime);
 
+    int updatePaymentFlagForStudent(String rollNo);
+
 }

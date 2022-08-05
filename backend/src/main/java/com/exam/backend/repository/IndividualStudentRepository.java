@@ -27,4 +27,8 @@ public interface IndividualStudentRepository extends CrudRepository<IndividualSt
 
     IndividualStudent findByRollNoAndDemoExam(String rollNo, String examTheme);
 
+    @Query(nativeQuery = true, value = "Update IndividualStudent set PaymentStatus = 1, Modifiedby = 'Admin' where RollNo = :rollNo")
+    @Modifying
+    int updatePaymentFlagForStudent(String rollNo);
+
 }

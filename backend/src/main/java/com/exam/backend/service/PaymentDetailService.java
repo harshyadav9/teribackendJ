@@ -9,4 +9,8 @@ public interface PaymentDetailService {
 
     IndividualStudentPaymentData getPaymentDetailForIndiStudent(String rollNumber);
 
+    PaymentDetail getPaymentDetailDataForOrderId(String orderId);
+
+    int updatePaymentDetail(String orderId, String paymentId);
+
 }

@@ -7,15 +7,12 @@ import com.exam.backend.repository.InternationalStudantsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -187,6 +184,11 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
         internationalStudantsRepository.saveAll(studentsToBeUpdatedForASchool);
         return "Roll Numbers updated Successfully.";
 
+    }
+
+    @Override
+    public int updatePaymentFlagForSchool(String schoolCode) {
+        return internationalStudantsRepository.updatePaymentFlagForSchool(schoolCode);
     }
 
     private Integer generateRollNumber(String rollNum) {

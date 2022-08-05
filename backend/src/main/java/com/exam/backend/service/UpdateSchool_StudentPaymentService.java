@@ -8,6 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @Service
 @Transactional
 public class UpdateSchool_StudentPaymentService {
@@ -16,14 +21,16 @@ public class UpdateSchool_StudentPaymentService {
 
     private final PaymentDetailServiceImpl paymentDetailService;
     private final InternationalStudantsServiceImpl internationalStudantsService;
+    private final IndividualStudentServiceImpl individualStudentService;
 
     @Autowired
-    public UpdateSchool_StudentPaymentService(PaymentDetailServiceImpl paymentDetailService, InternationalStudantsServiceImpl internationalStudantsService) {
+    public UpdateSchool_StudentPaymentService(PaymentDetailServiceImpl paymentDetailService, InternationalStudantsServiceImpl internationalStudantsService, IndividualStudentServiceImpl individualStudentService) {
         this.paymentDetailService = paymentDetailService;
         this.internationalStudantsService = internationalStudantsService;
+        this.individualStudentService = individualStudentService;
     }
 
-    public String updatePaymentData(PaymentDetailDto paymentDetailDto){
+    public String insertPaymentData(PaymentDetailDto paymentDetailDto){
         log.info("Inside updatePaymentData() {}", paymentDetailDto.getOrderId());
         PaymentDetail paymentDetail = new PaymentDetail();
 
@@ -39,6 +46,26 @@ public class UpdateSchool_StudentPaymentService {
 
         paymentDetailService.savePaymentDetail(paymentDetail);
         log.info("Saved payment details successfully in updatePaymentData() {}", paymentDetailDto.getOrderId());
+        return "Payment Details Updated Successfully.";
+    }
+
+    public String updatePaymentData(List<PaymentDetailDto> paymentDetailDtoList){
+        log.info("Inside updatePaymentData() {}", paymentDetailDtoList);
+
+        for (PaymentDetailDto paymentDetailDto : paymentDetailDtoList){
+            PaymentDetail paymentDetail = paymentDetailService.getPaymentDetailDataForOrderId(paymentDetailDto.getOrderId());
+            if (paymentDetail.getSubscriberType().equalsIgnoreCase("SCHOOL")){
+
+                internationalStudantsService.updatePaymentFlagForSchool(paymentDetail.getSchoolcode_Rollno());
+                paymentDetailService.updatePaymentDetail(paymentDetail.getOrderId(), paymentDetailDto.getPaymentId());
+            }else {
+
+                individualStudentService.updatePaymentFlagForStudent(paymentDetail.getSchoolcode_Rollno());
+                paymentDetailService.updatePaymentDetail(paymentDetail.getOrderId(), paymentDetailDto.getPaymentId());
+            }
+        }
+
+        log.info("Exiting updatePaymentData().");
         return "Payment Details Updated Successfully.";
     }
 

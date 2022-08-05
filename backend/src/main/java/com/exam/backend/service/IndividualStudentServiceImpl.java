@@ -183,4 +183,9 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
             log.info("completed updateExamSlotAndDemoSlotDateTimeForIndvStudent.save(individualStudent) {}", individualStudent);
         }
     }
+
+    @Override
+    public int updatePaymentFlagForStudent(String rollNo) {
+        return individualStudentRepository.updatePaymentFlagForStudent(rollNo);
+    }
 }
