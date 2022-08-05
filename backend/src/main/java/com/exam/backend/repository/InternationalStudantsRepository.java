@@ -46,7 +46,8 @@ public interface InternationalStudantsRepository extends CrudRepository<Internat
             "WHERE sch.SchoolsCode = :schoolId")
     RollNumberData getSchoolDataForGivenSchool(String schoolId);
 
-    @Query(nativeQuery = true, value = "Update InternationalStudants set paymentStatus = 1, Modby = 'Admin', OrderId = :orderId where SchoolID = :schoolCode")
+    @Query(nativeQuery = true, value = "Update InternationalStudants set paymentStatus = 1, Modby = 'Admin', OrderId = :orderId where SchoolID = :schoolCode and " +
+            "OrderId is null and ExamSlotDateTime is not null and ExamSlotDateTime != '' and paymentStatus = 0")
     @Modifying
     int updatePaymentFlagForSchool(String schoolCode, String orderId);
 

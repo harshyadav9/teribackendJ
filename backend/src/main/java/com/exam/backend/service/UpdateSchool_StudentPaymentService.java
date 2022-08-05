@@ -52,7 +52,6 @@ public class UpdateSchool_StudentPaymentService {
     public String insertPaymentDataForOffline(List<PaymentDetailDto> paymentDetailDtoListOffline){
         log.info("Inside insertPaymentDataForOffline() {}", paymentDetailDtoListOffline);
 
-        List<String> schoolCodes = new ArrayList<>();
         List<PaymentDetail> paymentDetailList = new ArrayList<>();
 
         for (PaymentDetailDto paymentDetailDto : paymentDetailDtoListOffline){
@@ -69,7 +68,8 @@ public class UpdateSchool_StudentPaymentService {
             paymentDetail.setMode(paymentDetailDto.getMode());
             paymentDetailList.add(paymentDetail);
 
-            internationalStudantsService.updatePaymentFlagForSchool(paymentDetailDto.getSchoolcode_Rollno(), paymentDetailDto.getOrderId());
+            int count = internationalStudantsService.updatePaymentFlagForSchool(paymentDetailDto.getSchoolcode_Rollno(), paymentDetailDto.getOrderId());
+            log.info("Rows updated in internationalStudants in insertPaymentDataForOffline() :" +count);
         }
 
         paymentDetailService.savePaymentDetailsForOffline(paymentDetailList);
@@ -85,7 +85,8 @@ public class UpdateSchool_StudentPaymentService {
             PaymentDetail paymentDetail = paymentDetailService.getPaymentDetailDataForOrderId(paymentDetailDto.getOrderId());
             if (paymentDetail.getSubscriberType().equalsIgnoreCase("SCHOOL")){
 
-                internationalStudantsService.updatePaymentFlagForSchool(paymentDetail.getSchoolcode_Rollno(), paymentDetailDto.getOrderId());
+                int count = internationalStudantsService.updatePaymentFlagForSchool(paymentDetail.getSchoolcode_Rollno(), paymentDetailDto.getOrderId());
+                log.info("Rows updated in internationalStudants :" +count);
                 paymentDetailService.updatePaymentDetail(paymentDetail.getOrderId(), paymentDetailDto.getPaymentId());
             }else {
 
