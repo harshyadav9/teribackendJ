@@ -16,6 +16,6 @@ public interface InternationalStudantsService {
 
     String generateAndUpdateRollNumberForSchoolStudent(String schoolId);
 
-    int updatePaymentFlagForSchool(String schoolCode);
+    int updatePaymentFlagForSchool(String schoolCode, String orderId);
 
 }

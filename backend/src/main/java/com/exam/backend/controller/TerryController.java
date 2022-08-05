@@ -115,6 +115,14 @@ public class TerryController {
         return ResponseEntity.status(HttpStatus.OK).body(string);
     }
 
+    @PostMapping(value = "/insertPaymentDetailsForOffline")
+    public ResponseEntity<String> insertPaymentDetailsForOffline(@RequestBody List<PaymentDetailDto> paymentDetailDtoListOffline) {
+        log.info("Inside insertPaymentDetailsForOffline() {}", paymentDetailDtoListOffline);
+        String string = updateSchool_studentPaymentService.insertPaymentDataForOffline(paymentDetailDtoListOffline);
+        log.info("Exiting insertPaymentDetailsForOffline() {}", string);
+        return ResponseEntity.status(HttpStatus.OK).body(string);
+    }
+
     @PostMapping(value = "/generateSchoolRollNumber")
     public ResponseEntity<String> generateSchoolRollNumber(@RequestBody ChangePasswordDto rollNumberDto) {
         log.info("Inside generateSchoolRollNumber() {}", rollNumberDto);

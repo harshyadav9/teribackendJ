@@ -49,6 +49,35 @@ public class UpdateSchool_StudentPaymentService {
         return "Payment Details Updated Successfully.";
     }
 
+    public String insertPaymentDataForOffline(List<PaymentDetailDto> paymentDetailDtoListOffline){
+        log.info("Inside insertPaymentDataForOffline() {}", paymentDetailDtoListOffline);
+
+        List<String> schoolCodes = new ArrayList<>();
+        List<PaymentDetail> paymentDetailList = new ArrayList<>();
+
+        for (PaymentDetailDto paymentDetailDto : paymentDetailDtoListOffline){
+            PaymentDetail paymentDetail = new PaymentDetail();
+
+            paymentDetail.setOrderId(paymentDetailDto.getOrderId());
+            paymentDetail.setPaymentId(paymentDetailDto.getPaymentId());
+            paymentDetail.setAmount(paymentDetailDto.getAmount());
+            paymentDetail.setCreatedBy(paymentDetailDto.getCreatedBy());
+            paymentDetail.setModifyBy("Admin");
+            paymentDetail.setSchoolcode_Rollno(paymentDetailDto.getSchoolcode_Rollno());
+            paymentDetail.setSubscriberType(paymentDetailDto.getSubscriberType());
+            paymentDetail.setPaymentReceivedStatus(paymentDetailDto.getPaymentReceivedStatus());
+            paymentDetail.setMode(paymentDetailDto.getMode());
+            paymentDetailList.add(paymentDetail);
+
+            internationalStudantsService.updatePaymentFlagForSchool(paymentDetailDto.getSchoolcode_Rollno(), paymentDetailDto.getOrderId());
+        }
+
+        paymentDetailService.savePaymentDetailsForOffline(paymentDetailList);
+        log.info("Saved payment details successfully in insertPaymentDataForOffline() {}", paymentDetailList);
+        return "Payment Details Updated Successfully.";
+    }
+
+
     public String updatePaymentData(List<PaymentDetailDto> paymentDetailDtoList){
         log.info("Inside updatePaymentData() {}", paymentDetailDtoList);
 
@@ -56,7 +85,7 @@ public class UpdateSchool_StudentPaymentService {
             PaymentDetail paymentDetail = paymentDetailService.getPaymentDetailDataForOrderId(paymentDetailDto.getOrderId());
             if (paymentDetail.getSubscriberType().equalsIgnoreCase("SCHOOL")){
 
-                internationalStudantsService.updatePaymentFlagForSchool(paymentDetail.getSchoolcode_Rollno());
+                internationalStudantsService.updatePaymentFlagForSchool(paymentDetail.getSchoolcode_Rollno(), paymentDetailDto.getOrderId());
                 paymentDetailService.updatePaymentDetail(paymentDetail.getOrderId(), paymentDetailDto.getPaymentId());
             }else {
 

@@ -36,6 +36,11 @@ public class PaymentDetailServiceImpl implements  PaymentDetailService{
     }
 
     @Override
+    public void savePaymentDetailsForOffline(List<PaymentDetail> paymentDetailsOffline) {
+        paymentDetailRepository.saveAll(paymentDetailsOffline);
+    }
+
+    @Override
     public IndividualStudentPaymentData getPaymentDetailForIndiStudent(String rollNumber) {
        return paymentDetailRepository.getData(rollNumber);
 

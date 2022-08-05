@@ -187,8 +187,8 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
     }
 
     @Override
-    public int updatePaymentFlagForSchool(String schoolCode) {
-        return internationalStudantsRepository.updatePaymentFlagForSchool(schoolCode);
+    public int updatePaymentFlagForSchool(String schoolCode, String orderId) {
+        return internationalStudantsRepository.updatePaymentFlagForSchool(schoolCode, orderId);
     }
 
     private Integer generateRollNumber(String rollNum) {
