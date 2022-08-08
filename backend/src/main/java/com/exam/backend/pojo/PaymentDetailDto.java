@@ -9,6 +9,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
@@ -34,4 +35,6 @@ public class PaymentDetailDto implements Serializable {
     private String createdBy;
 
     private String modifyBy;
+
+    private Date paymentDate;
 }

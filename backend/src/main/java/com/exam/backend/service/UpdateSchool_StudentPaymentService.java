@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +34,9 @@ public class UpdateSchool_StudentPaymentService {
     public String insertPaymentData(PaymentDetailDto paymentDetailDto){
         log.info("Inside updatePaymentData() {}", paymentDetailDto.getOrderId());
         PaymentDetail paymentDetail = new PaymentDetail();
+        long millis=System.currentTimeMillis();
+        java.sql.Date date=new java.sql.Date(millis);
+
 
         paymentDetail.setOrderId(paymentDetailDto.getOrderId());
         paymentDetail.setPaymentId(paymentDetailDto.getPaymentId());
@@ -43,6 +47,7 @@ public class UpdateSchool_StudentPaymentService {
         paymentDetail.setSubscriberType(paymentDetailDto.getSubscriberType());
         paymentDetail.setPaymentReceivedStatus(paymentDetailDto.getPaymentReceivedStatus());
         paymentDetail.setMode(paymentDetailDto.getMode());
+        paymentDetail.setPaymentDate(date);
 
         paymentDetailService.savePaymentDetail(paymentDetail);
         log.info("Saved payment details successfully in updatePaymentData() {}", paymentDetailDto.getOrderId());
@@ -66,6 +71,7 @@ public class UpdateSchool_StudentPaymentService {
             paymentDetail.setSubscriberType(paymentDetailDto.getSubscriberType());
             paymentDetail.setPaymentReceivedStatus(paymentDetailDto.getPaymentReceivedStatus());
             paymentDetail.setMode(paymentDetailDto.getMode());
+            paymentDetail.setPaymentDate(paymentDetailDto.getPaymentDate());
             paymentDetailList.add(paymentDetail);
 
             int count = internationalStudantsService.updatePaymentFlagForSchool(paymentDetailDto.getSchoolcode_Rollno(), paymentDetailDto.getOrderId());

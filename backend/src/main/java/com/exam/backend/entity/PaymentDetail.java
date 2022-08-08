@@ -8,6 +8,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Date;
 
 @Entity
 @Table(name = "PaymentDetail")
@@ -44,4 +45,7 @@ public class PaymentDetail implements Serializable {
 
     @Column(name = "ModifyBy")
     private String modifyBy;
+
+    @Column(name = "PaymentDate")
+    private Date paymentDate;
 }
