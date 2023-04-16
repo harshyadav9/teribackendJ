@@ -16,6 +16,10 @@ public interface InternationalStudantsService {
 
     String generateAndUpdateRollNumberForSchoolStudent(String schoolId);
 
-    int updatePaymentFlagForSchool(String schoolCode, String orderId);
+    int insertPaymentFlagForSchoolOffline(String schoolCode, String orderId);
+
+    int updatePaymentFlagOrderIdForSchoolReconcile(String schoolCode, String orderId);
+
+    int updateOrderIdForSchoolHavingOrderIdNull(String schoolCode, String orderId);
 
 }

@@ -18,7 +18,7 @@ public interface InternationalStudantsRepository extends CrudRepository<Internat
 
     List<InternationalStudant> findBySchoolIdAndExamTheme(String schoolId, String examTheme);
 
-    List<InternationalStudant> findBySchoolIdAndDemoExam(String schoolId, String examTheme);
+    List<InternationalStudant> findBySchoolIdAndExamThemeAndDemoExam(String schoolId, String examTheme, String demoExam);
 
     List<InternationalStudant> findAllBySchoolIdAndPaymentStatusAndRollNoNull(String schoolId, Boolean paymentStatus);
 
@@ -46,10 +46,20 @@ public interface InternationalStudantsRepository extends CrudRepository<Internat
             "WHERE sch.SchoolsCode = :schoolId")
     RollNumberData getSchoolDataForGivenSchool(String schoolId);
 
-    @Query(nativeQuery = true, value = "Update InternationalStudants set paymentStatus = 1, Modby = 'Admin', OrderId = :orderId where SchoolID = :schoolCode and " +
+    @Query(nativeQuery = true, value = "Update InternationalStudants set paymentStatus = 1, Modby = 'Admin' where SchoolID = :schoolCode and OrderId = :orderId and " +
+            " ExamSlotDateTime is not null and ExamSlotDateTime != '' and paymentStatus = 0")
+    @Modifying
+    int updatePaymentFlagOrderIdForSchoolReconcile(String schoolCode, String orderId);
+
+    @Query(nativeQuery = true, value = "Update InternationalStudants set paymentStatus = 1, Modby = 'Admin' ,OrderId = :orderId where SchoolID = :schoolCode and " +
             "OrderId is null and ExamSlotDateTime is not null and ExamSlotDateTime != '' and paymentStatus = 0")
     @Modifying
-    int updatePaymentFlagForSchool(String schoolCode, String orderId);
+    int insertPaymentFlagForSchoolOffline(String schoolCode, String orderId);
+
+    @Query(nativeQuery = true, value = "Update InternationalStudants set orderId = :orderId where SchoolID = :schoolCode and " +
+            " ExamSlotDateTime is not null and ExamSlotDateTime != '' and paymentStatus = 0")
+    @Modifying
+    int updateOrderIdForSchoolHavingOrderIdNull(String schoolCode, String orderId);
 
     @Query(nativeQuery = true, value = "Update InternationalStudants set paymentStatus = 1, Modby = 'Admin' where SchoolID in (:schoolCodes)")
     @Modifying

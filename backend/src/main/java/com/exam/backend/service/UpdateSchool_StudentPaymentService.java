@@ -34,9 +34,6 @@ public class UpdateSchool_StudentPaymentService {
     public String insertPaymentData(PaymentDetailDto paymentDetailDto){
         log.info("Inside updatePaymentData() {}", paymentDetailDto.getOrderId());
         PaymentDetail paymentDetail = new PaymentDetail();
-        long millis=System.currentTimeMillis();
-        java.sql.Date date=new java.sql.Date(millis);
-
 
         paymentDetail.setOrderId(paymentDetailDto.getOrderId());
         paymentDetail.setPaymentId(paymentDetailDto.getPaymentId());
@@ -47,10 +44,14 @@ public class UpdateSchool_StudentPaymentService {
         paymentDetail.setSubscriberType(paymentDetailDto.getSubscriberType());
         paymentDetail.setPaymentReceivedStatus(paymentDetailDto.getPaymentReceivedStatus());
         paymentDetail.setMode(paymentDetailDto.getMode());
-        paymentDetail.setPaymentDate(date);
 
         paymentDetailService.savePaymentDetail(paymentDetail);
         log.info("Saved payment details successfully in updatePaymentData() {}", paymentDetailDto.getOrderId());
+
+        //find school details having paymentstatus zero
+        internationalStudantsService.updateOrderIdForSchoolHavingOrderIdNull(paymentDetailDto.getSchoolcode_Rollno(), paymentDetailDto.getOrderId());
+        log.info("Saved Orderid in international studants table {} {}", paymentDetailDto.getSchoolcode_Rollno(), paymentDetailDto.getOrderId());
+
         return "Payment Details Updated Successfully.";
     }
 
@@ -71,10 +72,9 @@ public class UpdateSchool_StudentPaymentService {
             paymentDetail.setSubscriberType(paymentDetailDto.getSubscriberType());
             paymentDetail.setPaymentReceivedStatus(paymentDetailDto.getPaymentReceivedStatus());
             paymentDetail.setMode(paymentDetailDto.getMode());
-            paymentDetail.setPaymentDate(paymentDetailDto.getPaymentDate());
             paymentDetailList.add(paymentDetail);
 
-            int count = internationalStudantsService.updatePaymentFlagForSchool(paymentDetailDto.getSchoolcode_Rollno(), paymentDetailDto.getOrderId());
+            int count = internationalStudantsService.insertPaymentFlagForSchoolOffline(paymentDetailDto.getSchoolcode_Rollno(), paymentDetailDto.getOrderId());
             log.info("Rows updated in internationalStudants in insertPaymentDataForOffline() :" +count);
         }
 
@@ -83,22 +83,26 @@ public class UpdateSchool_StudentPaymentService {
         return "Payment Details Updated Successfully.";
     }
 
-
     public String updatePaymentData(List<PaymentDetailDto> paymentDetailDtoList){
         log.info("Inside updatePaymentData() {}", paymentDetailDtoList);
 
         for (PaymentDetailDto paymentDetailDto : paymentDetailDtoList){
             PaymentDetail paymentDetail = paymentDetailService.getPaymentDetailDataForOrderId(paymentDetailDto.getOrderId());
-            if (paymentDetail.getSubscriberType().equalsIgnoreCase("SCHOOL")){
+            if (paymentDetail != null){
+                if (paymentDetail.getSubscriberType().equalsIgnoreCase("SCHOOL")){
 
-                int count = internationalStudantsService.updatePaymentFlagForSchool(paymentDetail.getSchoolcode_Rollno(), paymentDetailDto.getOrderId());
-                log.info("Rows updated in internationalStudants :" +count);
-                paymentDetailService.updatePaymentDetail(paymentDetail.getOrderId(), paymentDetailDto.getPaymentId());
+                    int count = internationalStudantsService.updatePaymentFlagOrderIdForSchoolReconcile(paymentDetail.getSchoolcode_Rollno(), paymentDetailDto.getOrderId());
+                    log.info("Rows updated in internationalStudants :" +count);
+                    paymentDetailService.updatePaymentDetail(paymentDetail.getOrderId(), paymentDetailDto.getPaymentId());
+                }else {
+
+                    individualStudentService.updatePaymentFlagForStudent(paymentDetail.getSchoolcode_Rollno());
+                    paymentDetailService.updatePaymentDetail(paymentDetail.getOrderId(), paymentDetailDto.getPaymentId());
+                }
             }else {
-
-                individualStudentService.updatePaymentFlagForStudent(paymentDetail.getSchoolcode_Rollno());
-                paymentDetailService.updatePaymentDetail(paymentDetail.getOrderId(), paymentDetailDto.getPaymentId());
+                log.info("Invalid orderid in updatePaymentData() {}", paymentDetailDto.getOrderId());
             }
+
         }
 
         log.info("Exiting updatePaymentData().");

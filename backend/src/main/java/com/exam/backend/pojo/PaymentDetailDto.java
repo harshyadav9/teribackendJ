@@ -36,5 +36,4 @@ public class PaymentDetailDto implements Serializable {
 
     private String modifyBy;
 
-    private Date paymentDate;
 }

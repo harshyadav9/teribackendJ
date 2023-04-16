@@ -45,7 +45,4 @@ public class PaymentDetail implements Serializable {
 
     @Column(name = "ModifyBy")
     private String modifyBy;
-
-    @Column(name = "PaymentDate")
-    private Date paymentDate;
 }

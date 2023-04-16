@@ -130,8 +130,8 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
                 log.info("completed internationalStudantsRepository.saveAll(li) {}", li);
             }
         }
-        if (examTheme.contains("MOCK")) {
-            List<InternationalStudant> liMock = internationalStudantsRepository.findBySchoolIdAndDemoExam(schoolId, "YES");
+        if (examTheme.equalsIgnoreCase("MOCK")) {
+            List<InternationalStudant> liMock = internationalStudantsRepository.findBySchoolIdAndExamThemeAndDemoExam(schoolId, "ESD","YES");
             for (InternationalStudant school : liMock) {
 
                 if (school.getDemoSlotDatetime() == null && school.getDemoExam().equalsIgnoreCase("YES")) {
@@ -142,9 +142,23 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
             }
             if (counter > 0) {
                 internationalStudantsRepository.saveAll(liMock);
-                log.info("completed internationalStudantsRepository.saveAll(liMock) {}", liMock);
+                log.info("completed internationalStudantsRepository.saveAll(MOCK) {}", liMock);
             }
 
+        } else if (examTheme.equalsIgnoreCase("MOCKGREEN")){
+            List<InternationalStudant> liMock = internationalStudantsRepository.findBySchoolIdAndExamThemeAndDemoExam(schoolId, "ESDGREEN","YES");
+            for (InternationalStudant school : liMock) {
+
+                if (school.getDemoSlotDatetime() == null && school.getDemoExam().equalsIgnoreCase("YES")) {
+                    school.setDemoSlotDatetime(examSlotDateTime + "-" + demoSlotDateTime);
+                    counter++;
+
+                }
+            }
+            if (counter > 0) {
+                internationalStudantsRepository.saveAll(liMock);
+                log.info("completed internationalStudantsRepository.saveAll(MOCKGREEN) {}", liMock);
+            }
         }
         return counter;
     }
@@ -187,8 +201,18 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
     }
 
     @Override
-    public int updatePaymentFlagForSchool(String schoolCode, String orderId) {
-        return internationalStudantsRepository.updatePaymentFlagForSchool(schoolCode, orderId);
+    public int insertPaymentFlagForSchoolOffline(String schoolCode, String orderId) {
+        return internationalStudantsRepository.insertPaymentFlagForSchoolOffline(schoolCode, orderId);
+    }
+
+    @Override
+    public int updatePaymentFlagOrderIdForSchoolReconcile(String schoolCode, String orderId) {
+        return internationalStudantsRepository.updatePaymentFlagOrderIdForSchoolReconcile(schoolCode, orderId);
+    }
+
+    @Override
+    public int updateOrderIdForSchoolHavingOrderIdNull(String schoolCode, String orderId) {
+       return internationalStudantsRepository.updateOrderIdForSchoolHavingOrderIdNull(schoolCode, orderId);
     }
 
     private Integer generateRollNumber(String rollNum) {

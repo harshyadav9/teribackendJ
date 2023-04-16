@@ -39,6 +39,7 @@ public class TerryController {
     private final DownloadExcelTemplateHelper downloadExcelTemplateHelper;
     private final HelpdeskTicketServiceImpl helpdeskTicketService;
     private final ChangePasswordService changePasswordService;
+    private final ConfigServiceImpl configService;
 
     @Autowired
     private Environment env;
@@ -46,7 +47,7 @@ public class TerryController {
     @Autowired
     public TerryController(SaveDataToDb saveDataToDb, SlotServiceImpl slotService, UpdateSchool_StudentPaymentService updateSchool_studentPaymentService,
                            InternationalStudantsServiceImpl internationalStudantsService, SchoolServiceImpl schoolService, IndividualStudentServiceImpl individualStudentService, PaymentDetailServiceImpl paymentDetailService,
-                           DownloadExcelTemplateHelper downloadExcelTemplateHelper, HelpdeskTicketServiceImpl helpdeskTicketService, ChangePasswordService changePasswordService) {
+                           DownloadExcelTemplateHelper downloadExcelTemplateHelper, HelpdeskTicketServiceImpl helpdeskTicketService, ChangePasswordService changePasswordService, ConfigServiceImpl configService) {
 
         this.saveDataToDb = saveDataToDb;
         this.slotService = slotService;
@@ -58,6 +59,7 @@ public class TerryController {
         this.downloadExcelTemplateHelper = downloadExcelTemplateHelper;
         this.helpdeskTicketService = helpdeskTicketService;
         this.changePasswordService = changePasswordService;
+        this.configService = configService;
     }
 
     @GetMapping(value = "/testLoadedEnv")
@@ -68,9 +70,15 @@ public class TerryController {
     @PostMapping(value = "/uploadSchoolData")
     public ResponseEntity<String> uploadSchoolData(@RequestBody List<InternationalStudantsDto> data) throws SQLIntegrityConstraintViolationException {
         log.info("inside uploadSchoolData() {}", data);
-        String msg = saveDataToDb.saveData(data);
-        log.info(msg);
-        return ResponseEntity.status(HttpStatus.OK).body(msg);
+        String continueFLag = configService.getConfigDataForConfigName("uploadSchoolDataEnable");
+        if (continueFLag != null && continueFLag.equalsIgnoreCase("TRUE")){
+            String msg = saveDataToDb.saveData(data);
+            log.info(msg);
+            return ResponseEntity.status(HttpStatus.OK).body(msg);
+        } else {
+            log.info("Enable flag is disabled. Not doing anything.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("This operation is closed now.");
+        }
     }
 
     @GetMapping(value = "/downloadExcelTemplate")
@@ -80,15 +88,22 @@ public class TerryController {
         response.setHeader("Content-Disposition", "attachment; filename=StudentUploadTemplate.xlsx");
         ByteArrayInputStream stream = downloadExcelTemplateHelper.downloadTemplate();
         IOUtils.copy(stream, response.getOutputStream());
-
     }
 
     @GetMapping(value = "/getSlotsData")
     public ResponseEntity<List<SchoolSlotData>> getSlotsData(@RequestParam String schoolId, @RequestParam String mode) {
         log.info("Inside getSlotsData() {} {}", schoolId, mode);
-        List<SchoolSlotData> li = slotService.getSlotsData(schoolId, mode);
-        log.info("Exiting getSlotsData() {}", li);
-        return ResponseEntity.status(HttpStatus.OK).body(li);
+        List<SchoolSlotData> li = new ArrayList<>();
+        String continueFLag = configService.getConfigDataForConfigName("getSlotsDataEnable");
+        if (continueFLag != null && continueFLag.equalsIgnoreCase("TRUE")){
+            li = slotService.getSlotsData(schoolId, mode);
+            log.info("Exiting getSlotsData() {}", li);
+            return ResponseEntity.status(HttpStatus.OK).body(li);
+        } else {
+            log.info("Enable flag is false. No data returned in getSlotsData()");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(li);
+        }
+
     }
 
     @PostMapping(value = "/updateSchoolSlotDetail")
@@ -146,12 +161,18 @@ public class TerryController {
     @PostMapping(value = "/registerStudent")
     public ResponseEntity<String> registerStudent(@RequestBody IndividualStudentDto individualStudentDto) {
         log.info("Inside registerStudent() {}", individualStudentDto);
-        String rollNumber = individualStudentService.saveStudent(individualStudentDto);
-        log.info("Completed registerStudent() {}", rollNumber);
-        if (rollNumber != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(rollNumber);
+        String continueFLag = configService.getConfigDataForConfigName("RegistrationActive");
+        if (continueFLag != null && continueFLag.equalsIgnoreCase("TRUE")){
+            String rollNumber = individualStudentService.saveStudent(individualStudentDto);
+            log.info("Completed registerStudent() {}", rollNumber);
+            if (rollNumber != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(rollNumber);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to generate");
+            }
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to generate");
+            log.info("Registration flag is disable in db. Returning back.");
+            return ResponseEntity.status(HttpStatus.OK).body("New registration is closed now.");
         }
     }
 
@@ -192,9 +213,16 @@ public class TerryController {
     @GetMapping(value = "/getSlotsDataForIndividualStudent")
     public ResponseEntity<List<IndividualStudentSlotData>> getSlotsDataForIndividualStudent(@RequestParam String rollNumber, @RequestParam String mode) {
         log.info("Inside getSlotsDataForIndividualStudent() {} {}", rollNumber, mode);
-        List<IndividualStudentSlotData> li = individualStudentService.getSlotsDataForIndvStudents(rollNumber, mode);
-        log.info("Exiting getSlotsDataForIndividualStudent() {}", li);
-        return ResponseEntity.status(HttpStatus.OK).body(li);
+        List<IndividualStudentSlotData> li = new ArrayList<>();
+        String continueFLag = configService.getConfigDataForConfigName("getSlotsDataForIndividualStudentEnable");
+        if (continueFLag != null && continueFLag.equalsIgnoreCase("TRUE")){
+            li = individualStudentService.getSlotsDataForIndvStudents(rollNumber, mode);
+            log.info("Exiting getSlotsDataForIndividualStudent() {}", li);
+            return ResponseEntity.status(HttpStatus.OK).body(li);
+        } else {
+            log.info("Enable FLag is false. Not returning anything in getSlotsDataForIndividualStudent()");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(li);
+        }
     }
 
     @PostMapping(value = "/updateSlotsDataForIndividualStudent")
