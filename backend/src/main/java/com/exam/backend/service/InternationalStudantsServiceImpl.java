@@ -98,6 +98,7 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
         internationalStudantsHistory.setExamTheme(data.getExamTheme());
         internationalStudantsHistory.setSchoolID(data.getSchoolId());
         internationalStudantsHistory.setClassName(data.getClassName());
+        internationalStudantsHistory.setStudentSeqNo(data.getStudentSeqNo());
 
         internationalStudantsHistoryRepository.save(internationalStudantsHistory);
         log.info("Exiting insertDataIntoHistoryTableForTracking() {}", data);

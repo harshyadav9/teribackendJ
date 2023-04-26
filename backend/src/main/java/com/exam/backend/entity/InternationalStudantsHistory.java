@@ -47,4 +47,7 @@ public class InternationalStudantsHistory implements Serializable {
     @Column(name = "Class")
     private String className;
 
+    @Column(name = "StudentSeqNo")
+    private String studentSeqNo;
+
 }
