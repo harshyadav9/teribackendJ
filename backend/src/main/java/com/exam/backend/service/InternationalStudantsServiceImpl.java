@@ -79,6 +79,7 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
         internationalStudant.setModby(internationalStudantDto.getSchoolId());
         internationalStudant.setCreatedby(internationalStudantDto.getSchoolId());
         internationalStudant.setDob(internationalStudantDto.getDob());
+        internationalStudant.setStudentSeqNo(internationalStudantDto.getStudentSeqNo());
         internationalStudant.setName(internationalStudantDto.getName());
         internationalStudant.setSchoolId(internationalStudantDto.getSchoolId());
 

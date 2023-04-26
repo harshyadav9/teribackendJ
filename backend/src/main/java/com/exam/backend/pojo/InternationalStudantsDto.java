@@ -13,6 +13,8 @@ public class InternationalStudantsDto {
 
     private String dob;
 
+    private String studentSeqNo;
+
     private String name;
 
     private String className;

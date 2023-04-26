@@ -62,6 +62,9 @@ public class InternationalStudant implements Serializable {
     @Column(name = "Rollno")
     private String rollNo;
 
+    @Column(name = "StudentSeqNo")
+    private String studentSeqNo;
+
     @Column(name = "updateTimestamp")
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)

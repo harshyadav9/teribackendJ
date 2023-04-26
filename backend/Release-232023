@@ -1,0 +1,45 @@
+TERI 2023 IT Changes
+-----------------------
+1. There shall be only 1 theme (ESD)
+2. Schools will have the choice to choose either of 1-sep OR 12-Oct as exam dates .
+   However schools which register after 15-july will have exam date as 12-oct.
+3. Examination fees shall be Rs 200 per student and Sample papers will cost Rs 100 per student for Indian Students.
+   Fees is same for ESD and GO4Youth.
+4. Examination fees shall be $6 per student and Sample papers will cost $3  per student for International Students.
+   Fees is same for ESD and GO4Youth
+5. Last year school codes to be maintained for schools who have paid fees last year , these schools will have default password set .
+6. Users can login and change their password.
+7. Schools registration year to be maintained for all the historical data and current data.
+8. Indian schools will have mobile OTP validation and international schools will have email OTP validation .
+   email and mobile data should be captured for all cases
+9. Application start date will be 5-May till 15- July.
+10.Minimum number of students per school shall be 20.
+11. Home page --- No individual tab , no CBT related info , No GO4Youth Tab
+12. Registration Page -- Indian schools will have mobile OTP validation and international schools will have email OTP validation .
+    email and mobile data should be captured for all cases
+13. In case school data is available after search school click, then new school code should not be generated at the time of save .
+    data should be updated
+14. School registration year should be maintained
+15. student upload
+16. examination date  can be asked at school edit page {1-sep / 12-Oct}
+17. change password option should be there after login
+18. grid functionality update .
+
+
+S. No.
+Name of the Student
+Class
+Section
+Sample Question Booklet
+Medium of Examination
+
+
+
+
+
+
+
+
+{YES / NO}
+{ENGLISH / HINDI}
+
