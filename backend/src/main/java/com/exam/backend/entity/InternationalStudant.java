@@ -76,4 +76,7 @@ public class InternationalStudant implements Serializable {
     @Column(name = "Modby")
     private String modby;
 
+    @Column(name = "Language")
+    private String language;
+
 }

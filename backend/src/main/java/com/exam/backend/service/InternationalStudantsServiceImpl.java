@@ -82,9 +82,9 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
         internationalStudant.setStudentSeqNo(internationalStudantDto.getStudentSeqNo());
         internationalStudant.setName(internationalStudantDto.getName());
         internationalStudant.setSchoolId(internationalStudantDto.getSchoolId());
+        internationalStudant.setLanguage(internationalStudantDto.getLanguage());
 
         return internationalStudant;
-
     }
 
     private void insertDataIntoHistoryTableForTracking(InternationalStudantsDto data) {
@@ -99,6 +99,7 @@ public class InternationalStudantsServiceImpl implements InternationalStudantsSe
         internationalStudantsHistory.setSchoolID(data.getSchoolId());
         internationalStudantsHistory.setClassName(data.getClassName());
         internationalStudantsHistory.setStudentSeqNo(data.getStudentSeqNo());
+        internationalStudantsHistory.setLanguage(data.getLanguage());
 
         internationalStudantsHistoryRepository.save(internationalStudantsHistory);
         log.info("Exiting insertDataIntoHistoryTableForTracking() {}", data);

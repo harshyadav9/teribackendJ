@@ -11,6 +11,8 @@ import lombok.ToString;
 @NoArgsConstructor
 public class InternationalStudantsDto {
 
+    private String language;
+
     private String dob;
 
     private String studentSeqNo;
