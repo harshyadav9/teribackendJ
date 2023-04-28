@@ -72,9 +72,18 @@ public class TerryController {
         log.info("inside uploadSchoolData() {}", data);
         String continueFLag = configService.getConfigDataForConfigName("uploadSchoolData");
         if (continueFLag != null && continueFLag.equalsIgnoreCase("TRUE")) {
-            String msg = saveDataToDb.saveData(data);
-            log.info(msg);
-            return ResponseEntity.status(HttpStatus.OK).body(msg);
+            try{
+                String msg = saveDataToDb.saveData(data);
+                log.info(msg);
+                return ResponseEntity.status(HttpStatus.OK).body(msg);
+            } catch(Exception e){
+                log.error(e.getMessage());
+                if (e.getMessage().contains("ConstraintViolationException")){
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+                }
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            }
+
         } else {
             log.info("Enable flag is false. No data returned in uploadSchoolData()");
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Requested Action is disabled. Please check with Admin.");
