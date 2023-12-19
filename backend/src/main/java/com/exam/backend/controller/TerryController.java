@@ -33,7 +33,9 @@ public class TerryController {
     private final SlotServiceImpl slotService;
     private final UpdateSchool_StudentPaymentService updateSchool_studentPaymentService;
     private final InternationalStudantsServiceImpl internationalStudantsService;
-    private final SchoolServiceImpl schoolService;
+
+    @Autowired
+    private SchoolServiceImpl schoolService;
     private final IndividualStudentServiceImpl individualStudentService;
     private final PaymentDetailServiceImpl paymentDetailService;
     private final DownloadExcelTemplateHelper downloadExcelTemplateHelper;
@@ -64,6 +66,7 @@ public class TerryController {
 
     @GetMapping(value = "/testLoadedEnv")
     public ResponseEntity<String> testLoadedEnv() {
+        SchoolServiceImpl schoolService = new SchoolServiceImpl(null);
         return ResponseEntity.status(HttpStatus.OK).body(env.getProperty("db.env"));
     }
 

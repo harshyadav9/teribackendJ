@@ -58,7 +58,7 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
 //        if (individualStudentDB != null){
 //            Integer last4digitsofRunningRollNo = Integer.valueOf(individualStudentDB.getRollNo().substring(individualStudentDB.getRollNo().length() - 5));
 //        }
-        Integer last4digits = individualStudentRepository.findLastRunningRollNumber(studentDto.getRollNoPrefix());
+        Integer last4digits = individualStudentRepository.findLastRunningRollNumber(studentDto.getRollNoPrefix(), studentDto.getIndigo());
        // individualStudentRepository.findLastRunningRollNumber(studentDto.getCountry(), studentDto.getState());
         final DecimalFormat decimalFormat = new DecimalFormat("0000");
         if(last4digits != null){
