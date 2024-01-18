@@ -73,4 +73,6 @@ public class IndividualStudentDto {
 
     private String indigo;
 
+    private String medium;
+
 }

@@ -52,6 +52,7 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
         individualStudent.setPgEmail(studentDto.getPgEmail());
         individualStudent.setPgMobile(studentDto.getPgMobile());
         individualStudent.setIndiGO(studentDto.getIndigo());
+        individualStudent.setMedium(studentDto.getMedium());
 
         //generate RollNumber
 //        IndividualStudent individualStudentDB = individualStudentRepository.findByCountryAndStateOrderbyModifiedOnDescLimit1(studentDto.getCountry(), studentDto.getState());
@@ -125,6 +126,7 @@ public class IndividualStudentServiceImpl implements IndividualStudentService {
             individualStudentDto.setExamSlotDateTime(individualStudent.get().getExamSlotDateTime());
             individualStudentDto.setDemoSlotDateTime(individualStudent.get().getDemoSlotDateTime());
             individualStudentDto.setIndigo(individualStudent.get().getIndiGO());
+            individualStudentDto.setMedium(individualStudent.get().getMedium() != null ? individualStudent.get().getMedium() : "");
 
             log.info("Completed getIndividualStudentDetail() {}", individualStudentDto);
             return individualStudentDto;
